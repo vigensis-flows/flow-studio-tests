@@ -14,9 +14,9 @@ Read `.claude/agents/registry.json` to see available agents.
 
 The user requested a meeting with: **{{ARGS}}**
 
-Parse this as a comma-separated list of agent keys (e.g., "product-manager, engineering-lead" or "pm, el" using shortnames).
+Parse this as a comma-separated list of agent keys (e.g., "product-manager, tech-lead, product-designer").
 
-Match each against the registry (by key, shortname, or name).
+Match each against the registry (by key or name).
 
 **If any agent is not found:**
 - List the invalid agents

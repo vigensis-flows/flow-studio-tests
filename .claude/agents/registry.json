@@ -1,114 +1,166 @@
 {
   "_note": "All agents automatically follow the style guide (loaded via CLAUDE.md)",
   "agents": {
-    "engineering-lead": {
-      "name": "Engineering Catalyst",
-      "shortname": "el",
-      "file": ".claude/agents/engineering-catalyst-system-prompt.md",
-      "description": "Engineering Lead focused on feasibility and validated learning",
-      "domain": "engineering",
-      "emoji": "⚙️",
-      "required_context": [
-        "docs/process/development.md"
-      ]
+    "brand-marketer": {
+      "description": "Branding and Marketing specialist",
+      "domain": "branding-and-marketing",
+      "emoji": "📣",
+      "file": ".claude/agents/brand-strategist-system-prompt.md",
+      "name": "Brand Strategist",
+      "shortname": "bm"
+    },
+    "brand-strategist": {
+      "description": "Branding and Marketing specialist focused on growth",
+      "domain": "branding-and-marketing",
+      "emoji": "📣",
+      "file": ".claude/agents/brand-strategist.md",
+      "name": "Brand Strategist"
     },
     "data-science-lead": {
-      "name": "Data Science Lead",
-      "shortname": "dsl",
-      "file": ".claude/agents/data-science-lead-system-prompt.md",
       "description": "ML/AI and data science leadership - model development and strategy",
       "domain": "data-science",
-      "emoji": "🧮"
+      "emoji": "🧮",
+      "file": ".claude/agents/data-science-lead.md",
+      "name": "Data Science Lead"
     },
-    "product-manager": {
-      "name": "Product Maestro",
-      "shortname": "pm",
-      "file": ".claude/agents/product-maestro-system-prompt.md",
-      "description": "Product Manager focused on viability and customer value",
-      "domain": "product-management",
-      "emoji": "🎯",
-      "required_context": [
-        "docs/process/development.md"
-      ]
-    },
-    "product-designer": {
-      "name": "Design Prism",
-      "shortname": "pd",
-      "file": ".claude/agents/design-prism-system-prompt.md",
+    "design-shaper": {
       "description": "Product Designer focused on usability and user experience",
       "domain": "product-design",
       "emoji": "🎨",
+      "file": ".claude/agents/design-shaper.md",
+      "name": "Design Shaper"
+    },
+    "docu-mentor": {
+      "description": "Technical documentation specialist and writing mentor",
+      "domain": "technical-writing",
+      "emoji": "📝",
+      "file": ".claude/agents/docu-mentor.md",
+      "name": "Docu Mentor"
+    },
+    "engineering-lead": {
+      "description": "Engineering Lead focused on feasibility and validated learning",
+      "domain": "engineering",
+      "emoji": "⚙️",
+      "file": ".claude/agents/engineering-catalyst-system-prompt.md",
+      "name": "Engineering Catalyst",
       "required_context": [
         "docs/process/development.md"
-      ]
-    },
-    "brand-marketer": {
-      "name": "Brand Strategist",
-      "shortname": "bm",
-      "file": ".claude/agents/brand-strategist-system-prompt.md",
-      "description": "Branding and Marketing specialist",
-      "domain": "branding-and-marketing",
-      "emoji": "📣"
-    },
-    "strategic-thinker": {
-      "name": "Strategic Advisor",
-      "shortname": "st",
-      "file": ".claude/agents/strategic-advisor-system-prompt.md",
-      "description": "Strategic thinking and analysis",
-      "domain": "strategic-thinking",
-      "emoji": "🧠"
+      ],
+      "shortname": "el"
     },
     "executive-strategist": {
-      "name": "Executive Strategist",
-      "shortname": "es",
-      "file": ".claude/agents/executive-strategist-system-prompt.md",
       "description": "Executive-level strategic management and startup mentorship",
       "domain": "strategic-management",
-      "emoji": "👔"
-    },
-    "research-analyst": {
-      "name": "Research Analyst",
-      "shortname": "ra",
-      "file": ".claude/agents/research-analyst-system-prompt.md",
-      "description": "Research and analysis",
-      "domain": "research",
-      "emoji": "🔬"
-    },
-    "technical-writer": {
-      "name": "DocuMentor",
-      "shortname": "tw",
-      "file": ".claude/agents/docu-mentor-system-prompt.md",
-      "description": "Technical documentation specialist",
-      "domain": "technical-writing",
-      "emoji": "📝"
-    },
-    "prompt-engineer": {
-      "name": "PromptMentor",
-      "shortname": "pe",
-      "file": ".claude/agents/prompt-mentor-system-prompt.md",
-      "description": "Prompt engineering specialist",
-      "domain": "prompt-engineering",
-      "emoji": "🤖"
+      "emoji": "👔",
+      "file": ".claude/agents/executive-strategist.md",
+      "name": "Executive Strategist"
     },
     "knowledge-navigator": {
-      "name": "Knowledge Navigator",
-      "shortname": "kn",
-      "file": ".claude/agents/knowledge-navigator-system-prompt.md",
       "description": "Chief Knowledge Officer - knowledge management and organizational learning",
       "domain": "knowledge-management",
-      "emoji": "🧭"
+      "emoji": "🧭",
+      "file": ".claude/agents/knowledge-navigator.md",
+      "name": "Knowledge Navigator"
+    },
+    "product-designer": {
+      "description": "Product Designer focused on usability and user experience",
+      "domain": "product-design",
+      "emoji": "🎨",
+      "file": ".claude/agents/design-prism-system-prompt.md",
+      "name": "Design Prism",
+      "required_context": [
+        "docs/process/development.md"
+      ],
+      "shortname": "pd"
+    },
+    "product-maestro": {
+      "description": "Product Manager focused on value and viability",
+      "domain": "product-management",
+      "emoji": "🎯",
+      "file": ".claude/agents/product-maestro.md",
+      "name": "Product Maestro"
+    },
+    "product-manager": {
+      "description": "Product Manager focused on viability and customer value",
+      "domain": "product-management",
+      "emoji": "🎯",
+      "file": ".claude/agents/product-maestro-system-prompt.md",
+      "name": "Product Maestro",
+      "required_context": [
+        "docs/process/development.md"
+      ],
+      "shortname": "pm"
+    },
+    "prompt-engineer": {
+      "description": "Prompt engineering specialist",
+      "domain": "prompt-engineering",
+      "emoji": "🤖",
+      "file": ".claude/agents/prompt-mentor-system-prompt.md",
+      "name": "PromptMentor",
+      "shortname": "pe"
+    },
+    "prompt-mentor": {
+      "description": "Prompt engineering specialist and teacher",
+      "domain": "prompt-engineering",
+      "emoji": "🤖",
+      "file": ".claude/agents/prompt-mentor.md",
+      "name": "Prompt Mentor"
+    },
+    "quality-guardian": {
+      "description": "QMS steward focused on quality standards and continuous improvement",
+      "domain": "quality-management",
+      "emoji": "🛡️",
+      "file": ".claude/agents/quality-guardian.md",
+      "name": "Quality Guardian"
+    },
+    "research-analyst": {
+      "description": "Research methodology and analysis specialist",
+      "domain": "research",
+      "emoji": "🔬",
+      "file": ".claude/agents/research-analyst.md",
+      "name": "Research Analyst"
+    },
+    "strategic-advisor": {
+      "description": "Strategic thinking and analysis specialist",
+      "domain": "strategic-thinking",
+      "emoji": "🧠",
+      "file": ".claude/agents/strategic-advisor.md",
+      "name": "Strategic Advisor"
+    },
+    "strategic-thinker": {
+      "description": "Strategic thinking and analysis",
+      "domain": "strategic-thinking",
+      "emoji": "🧠",
+      "file": ".claude/agents/strategic-advisor-system-prompt.md",
+      "name": "Strategic Advisor",
+      "shortname": "st"
+    },
+    "tech-smith": {
+      "description": "Tech Lead focused on feasibility and technical quality",
+      "domain": "engineering",
+      "emoji": "⚙️",
+      "file": ".claude/agents/tech-smith.md",
+      "name": "Tech Smith"
+    },
+    "technical-writer": {
+      "description": "Technical documentation specialist",
+      "domain": "technical-writing",
+      "emoji": "📝",
+      "file": ".claude/agents/docu-mentor-system-prompt.md",
+      "name": "DocuMentor",
+      "shortname": "tw"
     }
   },
   "teams": {
     "trio": {
-      "name": "Product Trio",
+      "description": "Full Product Trio (PM, Designer, Engineering Lead)",
+      "emoji": "🎯🎨⚙️",
       "members": [
         "product-manager",
         "product-designer",
         "engineering-lead"
       ],
-      "description": "Full Product Trio (PM, Designer, Engineering Lead)",
-      "emoji": "🎯🎨⚙️"
+      "name": "Product Trio"
     }
   }
 }

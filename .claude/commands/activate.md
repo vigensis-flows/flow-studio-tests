@@ -14,7 +14,7 @@ Read `.claude/agents/registry.json` to see available agents.
 
 The user requested to activate: **{{ARGS}}**
 
-Match this against the registry (by key, shortname, or name).
+Match this against the registry (by key or name).
 
 ## Step 3: Load the Agent
 

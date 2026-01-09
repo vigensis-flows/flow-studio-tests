@@ -20,7 +20,7 @@ Read `.claude/agents/registry.json` to see available agents.
 
 The user requested to invite: **{{ARGS}}**
 
-Match this against the registry (by key, shortname, or name).
+Match this against the registry (by key or name).
 
 ## Step 4: Load the Invited Agent
 

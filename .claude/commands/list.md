@@ -9,13 +9,13 @@ Read `.claude/agents/registry.json` and display beautifully:
 ## 👤 Available Agents
 
 ```
-[emoji] agent-key (shortname)
+[emoji] agent-key
     Name: Full Agent Name
     Domain: domain-name
     Description: description
     Activate: /activate agent-key
 
-[Repeat for all personas]
+[Repeat for all agents]
 ```
 
 ## 👥 Available Teams

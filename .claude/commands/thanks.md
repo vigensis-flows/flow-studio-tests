@@ -17,7 +17,7 @@ Verify what's currently active:
 
 The user wants to thank and release: **{{ARGS}}**
 
-Match this against currently active agents (by key, shortname, or name).
+Match this against currently active agents (by key or name).
 
 ## Step 3: Display Departure Notification
 
