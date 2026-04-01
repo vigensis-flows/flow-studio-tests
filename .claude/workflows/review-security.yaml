@@ -1,0 +1,62 @@
+name: review-security
+description: >
+  Security expert reviews the product definition for threats, vulnerabilities,
+  and security risks. Produces a security assessment with risk ratings and recommendations.
+version: "1.0.0"
+
+input:
+  product_name:
+    type: string
+    required: true
+    description: Human-readable name of the product
+  instruction:
+    type: string
+    required: false
+    description: Optional guidance for the review
+
+steps:
+  - name: security-review
+    type: ask_ai
+    description: Conduct security review of the product definition
+    config:
+      agent: security-sentinel
+      prompt: |
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        ## Task
+
+        Conduct a security review of this product's definition.
+
+        Read these documents:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/7-architecture-blueprint.md
+
+        Assess:
+        - Authentication and authorization design
+        - Data handling and storage security
+        - API security and input validation
+        - Infrastructure and deployment risks
+        - OWASP Top 10 applicability
+        - Supply chain and dependency risks
+
+        For each finding, provide:
+        - Risk rating (Critical / High / Medium / Low)
+        - Description of the risk
+        - Recommendation to address it
+
+        ## Iteration Awareness
+
+        Check if docs/concept-validation/security-review.md already exists.
+        If it does, read it first and refine based on the user instruction.
+        Preserve what's still valid, update what needs to change.
+        Note revisions in a "## Revision Notes" section at the end.
+
+        ## Output
+
+        Save to: docs/concept-validation/security-review.md
+    output:
+      path: context.review
+    postconditions:
+      - type: file_exists
+        path: "docs/concept-validation/security-review.md"

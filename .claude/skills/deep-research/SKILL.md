@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Conducts comprehensive research on any topic using web search, Asset Store, SOAR, and Context7. Creates research plans and produces synthesis reports. Use when the Product Trio needs answers to specific research questions during MVP discovery.
+description: Conducts comprehensive research on any topic using web search, Expertise, SOAR, and Context7. Creates research plans and produces synthesis reports. Use when the Product Trio needs answers to specific research questions during MVP discovery.
 ---
 
 # Deep Research
@@ -20,7 +20,7 @@ Use this skill when:
 
 | Source | Tool | Best For |
 |--------|------|----------|
-| **Asset Store** | `mcp__asset-store__search_assets` | Curated knowledge, methodologies, best practices |
+| **Expertise** | `mcp__expertise__search_assets` | Curated knowledge, methodologies, best practices |
 | **SOAR** | `mcp__soar__search_soar` | Current trends, recent developments, state of the art |
 | **Web Search** | `WebSearch` | Broad market data, competitors, current events |
 | **Web Fetch** | `WebFetch` | Specific page content, documentation |
@@ -37,7 +37,7 @@ Questions answered:
 - How do competitors position themselves?
 - What pricing models exist?
 
-Sources priority: WebSearch → SOAR → Asset Store
+Sources priority: WebSearch → SOAR → Expertise
 
 ### User Research (Secondary)
 
@@ -47,7 +47,7 @@ Questions answered:
 - What do they value?
 - What are common complaints about existing solutions?
 
-Sources priority: WebSearch (reviews, forums) → Asset Store (user research methods)
+Sources priority: WebSearch (reviews, forums) → Expertise (user research methods)
 
 ### Technical Research
 
@@ -57,7 +57,7 @@ Questions answered:
 - What are best practices?
 - What technologies should we consider?
 
-Sources priority: Context7 → Asset Store → SOAR → WebSearch
+Sources priority: Context7 → Expertise → SOAR → WebSearch
 
 ### Domain Research
 
@@ -67,7 +67,7 @@ Questions answered:
 - What domain-specific terminology is used?
 - What are industry best practices?
 
-Sources priority: Asset Store → WebSearch → SOAR
+Sources priority: Expertise → WebSearch → SOAR
 
 ---
 
@@ -136,7 +136,7 @@ Document findings in structured report.
 
 ## Output: Research Report
 
-Store at: `docs/products/[mvp-name]/research/[topic]-research.md`
+Store at: `docs/product-definition/research/[topic]-research.md`
 
 ```markdown
 # Research Report: [Topic]
@@ -301,7 +301,7 @@ Spawn: deep-research
   - question: "Healthcare scheduling software competitors"
   - type: market
   - depth: standard
-  - output: docs/products/[name]/research/competitors.md
+  - output: docs/product-definition/research/competitors.md
 ```
 
 ### Consuming Research
@@ -363,7 +363,7 @@ Research reports are added to Trio's context for subsequent rounds.
 
 **Sources**:
 - Context7: [technology] documentation
-- Asset Store: Engineering patterns
+- Expertise: Engineering patterns
 - SOAR: Current state of [technology]
 
 **Output**: Feasibility assessment with approach recommendations

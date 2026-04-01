@@ -1,0 +1,117 @@
+name: simple-research
+description: Research a single question using web sources
+version: "0.1.0"
+
+input:
+  question:
+    type: string
+    required: true
+    description: a research question
+  max_sources:
+    type: number
+    default: 3
+    description: the number of top sources to summarize
+
+steps:
+  - name: find-sources
+    type: ask-ai
+    config:
+      agent: research_analyst
+      prompt: |
+        Find 10-15 web sources that could help answer this research question:
+
+        "{{input.question}}"
+
+        Use web search to find relevant sources. For each source found, capture:
+        - url
+        - title
+        - snippet (brief description of what it contains)
+
+        Return as a JSON array of sources.
+    output:
+      path: context.relevant_sources
+      format: json
+      type: array
+      non_empty: true
+
+  - name: evaluate-and-select
+    type: ask-ai
+    config:
+      agent: research_analyst
+      prompt: |
+        Evaluate these sources for the question: "{{input.question}}"
+
+        Sources found:
+        {{context.relevant_sources}}
+
+        For EACH source, assess:
+        - relevance: high/medium/low
+        - notes: what it likely contains, any overlap with other sources
+
+        Then SELECT the top {{input.max_sources}} that together provide the best coverage.
+        For selected sources, explain the selection rationale.
+
+        Return as JSON with:
+        - sources_considered: [{url, title, relevance, notes}, ...]
+        - sources_selected: [{url, title, rationale}, ...]
+    output:
+      path: context.evaluation
+      format: json
+      required:
+        - sources_selected
+        - sources_considered
+
+  - name: summarize-sources
+    type: for-each
+    config:
+      over: context.evaluation.sources_selected
+      as: source
+      do:
+        type: ask-ai
+        config:
+          agent: research_analyst
+          prompt: |
+            Summarize this source for the question: "{{input.question}}"
+
+            URL: {{source.url}}
+            Title: {{source.title}}
+
+            Fetch the content and extract key points relevant to the question.
+            Focus on facts, data, and actionable insights.
+
+            Return as JSON: {url, title, summary}
+        output:
+          format: json
+          type: object
+          required:
+            - url
+            - title
+            - summary
+    output:
+      path: context.summaries
+      type: array
+
+  - name: synthesize-answer
+    type: ask-ai
+    config:
+      agent: research_analyst
+      prompt: |
+        Synthesize an answer to: "{{input.question}}"
+
+        Based on these source summaries:
+        {{context.summaries}}
+
+        Provide a comprehensive answer that:
+        - Directly addresses the question
+        - Integrates insights from all sources
+        - Notes conflicting information if any
+        - Identifies gaps or limitations
+
+        Return as JSON: {answer, confidence, gaps}
+    output:
+      path: context.synthesis
+      format: json
+      required:
+        - answer
+        - confidence
+        - gaps

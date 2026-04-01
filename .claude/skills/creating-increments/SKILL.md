@@ -16,6 +16,8 @@ An increment is a discrete, plannable unit of work that:
 - Is documented for team alignment and future reference
 - **Has an executable Build Plan for the Deliver phase**
 
+> **CRITICAL: The Build Plan is NOT optional.** An increment without a Build Plan is incomplete. Do NOT create an increment file with placeholder text like "[To be created]" or "[See other skill]". The Build Plan must be written as part of creating the increment - it is the tactical half of the Prepare phase. Placeholders are not acceptable.
+
 **Use increments for:**
 - New features or capabilities
 - System migrations or refactors
@@ -27,6 +29,68 @@ An increment is a discrete, plannable unit of work that:
 - Bug fixes (use issues)
 - Trivial changes (just do them)
 - Research without implementation intent (use notes)
+
+---
+
+## Increment Mindset
+
+**Increments are scope-based, not time-based.** They are discrete units of functionality, not calendar allocations.
+
+### Don't Worry About Duration
+
+Duration is irrelevant for planning. With AI-augmented development:
+- A "short" increment might complete in 2-4 hours
+- A "longer" increment might take 2-3 days (often because improvements are discovered)
+- This varies based on complexity discovered during execution, not planning estimates
+
+**Never suggest splitting an increment based on time.** Split based on scope:
+- Does it deliver a coherent capability?
+- Is the scope well-defined?
+- Are success criteria clear?
+
+If yes to all three, it's one increment regardless of how long execution takes.
+
+### Atomic, Not Gradual
+
+An increment makes a **clean change**:
+- Old code is deleted, not kept "just in case"
+- New code replaces old code completely
+- No "parallel running" periods
+- No "gradual migration" phases
+- No "feature flags to switch between old and new"
+
+**Wrong thinking**: "Let's keep the old system running alongside the new one for safety."
+
+**Right thinking**: "When the new code works, delete the old code."
+
+### Risks Should Be Simple
+
+Risks are things that could go wrong **during the increment**, not elaborate contingency plans.
+
+**Good risks:**
+| Risk | Mitigation |
+|------|------------|
+| API may have undocumented behavior | Test with real data before relying on it |
+| Large file uploads may timeout | Add progress indicator, test with big files |
+
+**Over-engineered risks (AVOID):**
+| Risk | Mitigation |
+|------|------------|
+| Migration might break things | Run old and new systems in parallel for 2 weeks, then cut over |
+| Users might not like the change | Build feature flags to toggle between old and new UI |
+| Data might get corrupted | Create rollback scripts and maintain backward compatibility |
+
+If a risk requires elaborate infrastructure to mitigate, the increment is too big or too risky. Split it or simplify.
+
+### Clean Completion
+
+When an increment is done:
+- All old code for the replaced functionality is **deleted**
+- All references to old code are **removed**
+- No "TODO: remove old code later" comments
+- No unused imports, dead functions, or orphaned files
+
+The codebase should look like the old approach **never existed**.
 
 ---
 
@@ -161,9 +225,11 @@ Fill in the strategic sections:
 | **Key Decisions** | What did we choose and why? | Table of decision + rationale |
 | **Risks** | What could go wrong? | Risk + mitigation table |
 
-### Step 5: Create the Build Plan
+### Step 5: Create the Build Plan (REQUIRED - Do This Now)
 
-Use the `creating-build-plans` skill to create executable steps:
+> **Do NOT skip this step or leave placeholders.** The Build Plan is part of the Prepare phase, not a separate task to do later. An increment without a Build Plan is incomplete and cannot move to Deliver.
+
+Create executable steps following the `creating-build-plans` skill patterns:
 
 1. **Identify components** - Data models, logic, UI, integrations
 2. **Order by dependencies** - Data → Logic → UI → Integration
@@ -171,7 +237,14 @@ Use the `creating-build-plans` skill to create executable steps:
 4. **Write prompts** - Claude Code CLI prompts with acceptance criteria
 5. **Add verification** - How to confirm each step is done
 
-The Build Plan goes in the Approach section or as a separate "Build Plan" section.
+The Build Plan goes in a dedicated "Build Plan" section within Prepare.
+
+**Each step must have:**
+- **Goal**: What this step achieves
+- **Depends on**: Previous steps (or None)
+- **Prompt**: Full Claude Code CLI prompt with context and task
+- **Acceptance**: Verifiable criteria
+- **Verification**: Commands to run
 
 ### Step 6: Review Before Delivering
 
@@ -193,7 +266,6 @@ The template at `docs/templates/increment.md` follows PDAI:
 ```markdown
 # [Increment Name]
 
-**Duration**: [1 day | 1 week | 1 month | ...]
 **Status**: [Prepare | Deliver | Assess | Improve | Complete]
 **Started**: YYYY-MM-DD
 
@@ -215,7 +287,8 @@ The template at `docs/templates/increment.md` follows PDAI:
 [High-level phases and milestones]
 
 ### Build Plan
-[Step-by-step execution plan - see creating-build-plans skill]
+
+> **REQUIRED**: Write actual steps here. Do NOT leave placeholder text.
 
 #### Step 1: [Name]
 **Goal**: [What this achieves]
@@ -318,7 +391,7 @@ The template at `docs/templates/increment.md` follows PDAI:
 Always list what's explicitly NOT in this increment:
 - Worker pool for parallel processing (future optimization)
 - Support for non-PDF formats (focus on PDF first)
-- Asset Store integration (separate increment)
+- Expertise integration (separate increment)
 
 ### Build Plan Steps
 
@@ -382,7 +455,7 @@ Create ExtractionJob resource with:
    cp docs/templates/increment.md docs/increments/my-feature-v1.md
    ```
 
-2. **Fill in metadata** - Duration, Status (Prepare), Started date
+2. **Fill in metadata** - Status (Prepare), Started date
 
 3. **Write the Goal** - One clear sentence
 
@@ -390,13 +463,15 @@ Create ExtractionJob resource with:
 
 5. **Plan the Approach** - High-level phases
 
-6. **Create the Build Plan** - Step-by-step executable prompts (use creating-build-plans skill)
+6. **Create the Build Plan (REQUIRED)** - Step-by-step executable prompts with Goal, Depends on, Prompt, Acceptance, Verification for each step. Do NOT leave placeholders.
 
 7. **Document Key Decisions** - What you chose and why
 
 8. **List Risks** - What could go wrong and mitigations
 
 9. **Set Scope Exclusions** - What's NOT included
+
+> **Validation Gate**: Before considering the increment complete, verify the Build Plan has actual executable steps, not placeholder text.
 
 ---
 
@@ -410,10 +485,15 @@ Create ExtractionJob resource with:
 | No key decisions documented | Record choices and rationale in table |
 | Skipping risks | Every change has risks - name them |
 | No phases in approach | Break into milestones for progress tracking |
-| **Missing Build Plan** | Add step-by-step executable prompts |
+| **Missing Build Plan** | Write the Build Plan NOW - it's required, not optional |
+| **Build Plan has placeholders** | "[To be created]" is NOT acceptable - write actual steps |
 | **Vague Build Plan steps** | Each step needs Goal, Prompt, Acceptance, Verification |
 | **Giant Build Plan steps** | Split into 1-2 hour chunks |
-| Starting Deliver without finishing Prepare | Complete all Prepare sections first |
+| Starting Deliver without finishing Prepare | Complete ALL Prepare sections including Build Plan first |
+| Deferring Build Plan to "later" | The Build Plan IS part of Prepare - there is no "later" |
+| **Over-engineered risk mitigations** | "Run in parallel", "rollback scripts", "feature flags" mean scope is unclear - clarify what you're actually changing |
+| **Keeping old code "just in case"** | Delete old code when new code works. No parallel running periods. |
+| **Splitting based on time estimates** | Increments are scope-based, not time-based. Split based on coherent capabilities, not duration guesses. |
 
 ---
 

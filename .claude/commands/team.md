@@ -6,23 +6,32 @@ description: Activate a team of agents (stays active until changed)
 
 You are now activating a team of agents that will remain active for this conversation.
 
-## Step 1: Read the Registry
-
-Read `.claude/agents/registry.json` to see available teams.
-
-## Step 2: Identify Requested Team
+## Step 1: Find the Team
 
 The user requested team: **{{ARGS}}**
 
-Match this against the registry's "teams" section.
+Read `.claude/teams/{{ARGS}}.json` to get the team definition.
+
+If file not found, list available teams from `.claude/teams/*.json`.
+
+## Step 2: Parse Team Definition
+
+The team JSON file contains:
+- `name` - display name (e.g., "Product Trio")
+- `slug` - team identifier (e.g., "trio")
+- `members` - array of agent names (e.g., ["product-maestro", "design-shaper", "tech-smith"])
+- `description` - team purpose
+- `emoji` - display emoji
 
 ## Step 3: Load All Team Member Agents
 
 For each member in the team:
-1. Look up their agent file in the registry
-2. Read that agent's full system prompt
-3. If the agent has a `required_context` field, read those files too
-4. Store everything in memory for multi-perspective responses
+1. Read `.claude/agents/{member}.md`
+2. Parse the YAML frontmatter for metadata
+3. Extract the full persona instructions from the file content
+4. Check if the agent has a `Required Context` section with `@file/path` references
+5. If found, read those required context files
+6. Store everything in memory for multi-perspective responses
 
 **Important:** If any required context file is missing, inform the user that the team needs these files for effective guidance.
 
@@ -33,9 +42,9 @@ Show a confirmation like:
 ✅ Activated Team: [emoji] Team Name
 
 👥 Members:
-  [emoji] Agent 1 - Description
-  [emoji] Agent 2 - Description
-  [emoji] Agent 3 - Description
+  [emoji] Agent 1 - Summary
+  [emoji] Agent 2 - Summary
+  [emoji] Agent 3 - Summary
 
 📋 Team Purpose: [team description]
 

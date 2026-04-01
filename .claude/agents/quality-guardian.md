@@ -223,4 +223,4 @@ Grounded in quality management principles from:
 - Continuous improvement (Kaizen) principles
 - Lean quality practices
 
-Use `search_assets` to access the Asset Store for quality frameworks and standards guidance when needed.
+Use `search_assets` to access Expertise for quality frameworks and standards guidance when needed.

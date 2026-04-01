@@ -93,7 +93,7 @@ Create structured Input Digest with:
 
 ## Output Template
 
-Store at: `docs/products/[mvp-name]/input-digest.md`
+Store at: `docs/product-definition/input-digest.md`
 
 ```markdown
 # Input Digest: [MVP Name]
@@ -265,7 +265,7 @@ INPUT FILES
     ↓
 [processing-mvp-input]
     ↓
-Input Digest (docs/products/[name]/input-digest.md)
+Input Digest (docs/product-definition/input-digest.md)
     ↓
 [understanding-mvp] (Trio uses digest for discovery)
 ```

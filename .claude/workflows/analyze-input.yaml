@@ -1,0 +1,76 @@
+name: analyze-input
+description: Extract content from uploaded files and generate 7 structured input files
+version: "1.0.0"
+
+input:
+  product_slug:
+    type: string
+    required: true
+    description: URL-friendly identifier for the product
+  product_name:
+    type: string
+    required: true
+    description: Human-readable name of the product
+  preparation_instruction:
+    type: string
+    required: false
+    description: Optional guidance for the analysis (e.g., tech stack, focus areas, constraints)
+
+steps:
+  # Step 1: Process and digest uploaded content
+  # Creates input-digest.md from raw uploaded files (PDFs, docs, images, etc.)
+  - name: digest
+    type: ask_ai
+    description: Process uploaded files and create structured digest
+    config:
+      agent: research-analyst
+      prompt: |
+        /processing-mvp-input {{input.product_slug}}
+
+        Product name: {{input.product_name}}
+
+        Process all files in input/ to create a comprehensive input digest.
+        The input directory may contain PDFs, documents, images, code, and other materials.
+        Some files may have .extracted.md companions (pre-extracted text from binary files).
+        When .extracted.md files exist, use those instead of the original binary file.
+
+        Save the digest to docs/product-definition/input-digest.md.
+    output:
+      path: context.digest
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/input-digest.md"
+
+  # Step 2: Analyze digest and generate 7 structured input files
+  # Uses web research to enrich understanding, produces canonical input files
+  - name: analyze
+    type: ask_ai
+    description: Research and generate 7 structured input files from digest
+    config:
+      agent: research-analyst
+      prompt: |
+        /analyzing-input {{input.product_slug}}
+
+        Product name: {{input.product_name}}
+        Preparation instruction (if any): {{input.preparation_instruction}}
+
+        Read the input digest at docs/product-definition/input-digest.md
+        and any text files in input/ to understand what this product is about.
+        Conduct targeted web research to fill gaps in competitive landscape,
+        user voice, and market context.
+
+        Generate all 7 structured input files in input/:
+        1. 1-problem-and-opportunity.md
+        2. 2-users-and-needs.md
+        3. 3-competitive-landscape.md
+        4. 4-product-intelligence.md
+        5. 5-user-voice.md
+        6. 6-differentiation-analysis.md
+        7. 7-research-meta.md
+    output:
+      path: context.analysis
+    postconditions:
+      - type: file_exists
+        path: "input/1-problem-and-opportunity.md"
+      - type: file_exists
+        path: "input/7-research-meta.md"

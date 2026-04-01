@@ -1,0 +1,186 @@
+# DEPRECATED: Replaced by product-discovery.yaml
+# See docs/product/product-lifecycle.md for the new product lifecycle.
+#
+name: discover-and-define
+description: Discovery, business hypotheses, vision, design, visual, content, and architecture
+version: "1.0.0"
+
+input:
+  product_slug:
+    type: string
+    required: true
+    description: URL-friendly identifier for the product
+  product_name:
+    type: string
+    required: true
+    description: Human-readable name of the product
+  instruction:
+    type: string
+    required: false
+    description: Optional user instruction for additional guidance
+
+steps:
+  # Step 1: Product Trio discovers what the MVP should be
+  - name: discover
+    type: ask_ai
+    description: Product Trio conducts discovery to define the MVP Brief
+    config:
+      agent: product-maestro
+      prompt: |
+        /understanding-mvp {{input.product_slug}}
+
+        Product name: {{input.product_name}}
+        User instruction (if any): {{input.instruction}}
+
+        Use the input files in input/ and the
+        input review at docs/products/{{input.product_slug}}/input-review.md to conduct
+        structured discovery rounds. Produce the MVP Brief at
+        docs/products/{{input.product_slug}}/mvp-brief.md.
+    output:
+      path: context.discovery
+    postconditions:
+      - type: file_exists
+        path: "docs/products/{{input.product_slug}}/mvp-brief.md"
+
+  # Step 2: Business Architect adds hypotheses to test
+  - name: business-hypotheses
+    type: ask_ai
+    description: Business Architect proposes top 3 hypotheses to validate with the MVP
+    config:
+      agent: business-architect
+      prompt: |
+        /creating-business-hypotheses {{input.product_slug}}
+
+        Review the MVP Brief and propose the top 3 hypotheses this MVP should test.
+        Add a "Hypotheses to Test" section to the MVP Brief.
+    output:
+      path: context.hypotheses
+    postconditions:
+      - type: file_exists
+        path: "docs/products/{{input.product_slug}}/mvp-brief.md"
+
+  # Step 3: Create product vision
+  - name: envision
+    type: ask_ai
+    description: Create the product vision document
+    config:
+      agent: product-maestro
+      prompt: |
+        /creating-product-vision {{input.product_slug}}
+
+        Product name: {{input.product_name}}
+
+        Read the MVP Brief at docs/products/{{input.product_slug}}/mvp-brief.md and the
+        input files to create a product vision at docs/products/{{input.product_slug}}/vision.md.
+    output:
+      path: context.vision
+    postconditions:
+      - type: file_exists
+        path: "docs/products/{{input.product_slug}}/vision.md"
+
+  # Step 4: Design the UX
+  - name: design-ux
+    type: ask_ai
+    description: Design the app UI structure and user flows
+    config:
+      agent: design-shaper
+      prompt: |
+        /designing-app-ui {{input.product_slug}}
+
+        Product name: {{input.product_name}}
+
+        Read the MVP Brief and Vision to design the app UI. Produce the design spec
+        at docs/products/{{input.product_slug}}/design-spec.md.
+
+        If you identify gaps or contradictions in upstream documents (MVP Brief, Vision),
+        note them in a '## Upstream Feedback' section. Do not silently work around gaps.
+    output:
+      path: context.design
+    postconditions:
+      - type: file_exists
+        path: "docs/products/{{input.product_slug}}/design-spec.md"
+
+  # Step 5: Visual design specification
+  - name: design-visual
+    type: ask_ai
+    description: Create the visual design specification
+    config:
+      agent: visual-designer
+      prompt: |
+        /creating-visual-design {{input.product_slug}}
+
+        Create the visual design specification based on the MVP Brief, Vision, and
+        Design Spec. Save to docs/products/{{input.product_slug}}/visual-spec.md.
+
+        If you identify gaps or contradictions in upstream documents (MVP Brief, Vision, Design Spec),
+        note them in a '## Upstream Feedback' section. Do not silently work around gaps.
+    output:
+      path: context.visual
+    postconditions:
+      - type: file_exists
+        path: "docs/products/{{input.product_slug}}/visual-spec.md"
+
+  # Step 6: Content specification
+  - name: content
+    type: ask_ai
+    description: Create the content specification
+    config:
+      agent: content-writer
+      prompt: |
+        /creating-content-spec {{input.product_slug}}
+
+        Create the content specification based on the MVP Brief, Vision, and
+        Design Spec. Save to docs/products/{{input.product_slug}}/content-spec.md.
+
+        If you identify gaps or contradictions in upstream documents (MVP Brief, Vision, Design Spec),
+        note them in a '## Upstream Feedback' section. Do not silently work around gaps.
+    output:
+      path: context.content
+    postconditions:
+      - type: file_exists
+        path: "docs/products/{{input.product_slug}}/content-spec.md"
+
+  # Step 7: Architecture — agent selected by tech stack
+  - name: architect
+    type: if
+    description: Create architecture document with stack-appropriate agent
+    config:
+      condition:
+        field: context.input_review.tech_stack
+        operator: equals
+        value: elixir
+      then:
+        name: architect-elixir
+        type: ask_ai
+        description: Create architecture using Elixir/Ash expertise
+        config:
+          agent: elixir-alchemist
+          prompt: |
+            /creating-architecture {{input.product_slug}}
+
+            Create the architecture document for this Elixir/Phoenix/Ash MVP.
+            Read the MVP Brief, Vision, and Design Spec (UX only).
+            Save to docs/products/{{input.product_slug}}/architecture.md.
+
+            If you identify gaps or contradictions in upstream documents (MVP Brief, Vision, Design Spec),
+            note them in a '## Upstream Feedback' section. Do not silently work around gaps.
+      else:
+        name: architect-generic
+        type: ask_ai
+        description: Create architecture using general engineering expertise
+        config:
+          agent: tech-smith
+          prompt: |
+            /creating-architecture {{input.product_slug}}
+
+            Create the architecture document for this MVP.
+            Read the MVP Brief, Vision, and Design Spec (UX only).
+            Save to docs/products/{{input.product_slug}}/architecture.md.
+
+            If you identify gaps or contradictions in upstream documents (MVP Brief, Vision, Design Spec),
+            note them in a '## Upstream Feedback' section. Do not silently work around gaps.
+    output:
+      path: context.architecture
+    postconditions:
+      - type: file_exists
+        path: "docs/products/{{input.product_slug}}/architecture.md"

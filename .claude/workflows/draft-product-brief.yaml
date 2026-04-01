@@ -1,0 +1,195 @@
+name: draft-product-brief
+description: >
+  VIA researches the product idea and creates the initial Product Brief.
+  We analyze the problem space, opportunities, competitors, user needs, etc.
+version: "1.0.0"
+
+input:
+  product_name:
+    type: string
+    required: true
+    description: "The name of the product"
+  description:
+    type: string
+    required: false
+    description: "A short description of the product idea"
+
+display:
+  label: "{{input.product_name}}"
+  sections:
+    - header: "Summary"
+      content: output.summary
+    - header: "Product Brief"
+      type: files
+      items:
+        - label: "Problem & Opportunity"
+          path: output.files.problem_and_opportunity
+        - label: "Users & Needs"
+          path: output.files.users_and_needs
+        - label: "Competitive Landscape"
+          path: output.files.competitive_landscape
+        - label: "Reality Check"
+          path: output.files.reality_check
+
+steps:
+
+  - name: additional-context
+    type: ask-user
+    description: You can provide additional context for the product brief
+    config:
+      prompt: |
+        We're about to research "{{input.product_name}}" and create your Product Brief.
+
+        VIA researches your idea thoroughly, then gives you the kind of honest feedback a sharp investor would — so you know exactly where you stand before deciding next steps.
+
+        Before we get started, two optional things may improve the result:
+      fields:
+        reference_url:
+          type: string
+          required: false
+          description: "Is there a product that inspires you? If so, paste a URL (website or GitHub repo) and we'll use it as a reference point."
+        instruction:
+          type: textarea
+          required: false
+          description: "Any thing you'd like to add? A specific direction, constraints, or focus areas? (e.g., 'Focus on the European market', 'Target small teams', 'Use Java/React')"
+    output:
+      path: context.research_context
+
+  - name: understand-the-problem-space
+    type: ask-ai
+    description: We analyze the problem space and target market
+    config:
+      agent: research-analyst
+      prompt: |
+        Research context for this task:
+
+        **Product:** {{input.product_name}}
+        **Description:** {{input.description}}
+        **Reference product:** {{context.research_context.reference_url}}
+        **User instruction:** {{context.research_context.instruction}}
+        /researching-problem-space {{input.product_name}}
+
+        Return as JSON:
+        {
+          "file": "docs/product-brief/1-problem-and-opportunity.md",
+          "summary": "<one-line summary of the core opportunity>"
+        }
+    output:
+      path: context.problem_analysis
+      format: json
+
+  - name: find-competitors
+    type: ask-ai
+    description: We identify and compares alternatives
+    config:
+      agent: research-analyst
+      prompt: |
+        Research context for this task:
+
+        **Product:** {{input.product_name}}
+        **Reference product:** {{context.research_context.reference_url}}
+        **User instruction:** {{context.research_context.instruction}}
+        /researching-competitors {{input.product_name}}
+
+        Return as JSON:
+        {
+          "files": ["docs/product-brief/3-competitive-landscape.md", "docs/product-brief/4-product-intelligence.md"],
+          "competitors_found": 3
+        }
+    output:
+      path: context.competitive_analysis
+      format: json
+
+  - name: listen-to-users
+    type: ask-ai
+    description: We gather real user feedback and needs
+    config:
+      agent: research-analyst
+      prompt: |
+        Research context for this task:
+
+        **Product:** {{input.product_name}}
+        **User instruction:** {{context.research_context.instruction}}
+
+        /researching-users {{input.product_name}}
+
+        Return as JSON:
+        {
+          "files": ["docs/product-brief/2-users-and-needs.md", "docs/product-brief/5-user-voice.md"],
+          "reviews_analyzed": "approximate count"
+        }
+    output:
+      path: context.user_research
+      format: json
+
+  - name: find-opportunities
+    type: ask-ai
+    description: We synthesize insights into differentiation vectors
+    config:
+      agent: research-analyst
+      prompt: |
+        Research context for this task:
+
+        **Product:** {{input.product_name}}
+        **User instruction:** {{context.research_context.instruction}}
+
+        /researching-opportunities {{input.product_name}}
+
+        Return as JSON:
+        {
+          "files": ["docs/product-brief/6-differentiation-analysis.md", "docs/product-brief/8-sources-and-methods.md"],
+          "vectors_identified": 3
+        }
+    output:
+      path: context.opportunities
+      format: json
+
+  - name: reality-check
+    type: ask-ai
+    description: We provide a reality check with potential investor feedback
+    config:
+      agent: venture-critic
+      prompt: |
+        Research context for this task:
+
+        **Product:** {{input.product_name}}
+        **Description:** {{input.description}}
+        **User instruction:** {{context.research_context.instruction}}
+
+        /reality-checking-product-briefs {{input.product_name}}
+
+        Return as JSON:
+        {
+          "file": "docs/product-brief/7-reality-check.md",
+          "signal": "<green|yellow|red>",
+          "top_risk": "<one-line summary of biggest risk>"
+        }
+    output:
+      path: context.reality_check
+      format: json
+
+  - name: write-summary
+    type: ask-ai
+    description: We create the executive summary and you can review the product brief
+    config:
+      agent: research-analyst
+      prompt: |
+        /writing-product-brief-summary {{input.product_name}}
+
+        Return as JSON:
+        {
+          "file": "docs/product-brief/executive-summary.md",
+          "summary": "one-sentence summary of the key finding"
+        }
+    output:
+      path: context.executive_summary
+      format: json
+
+  - name: save-results
+    type: run_script
+    config:
+      module: FlowStudio.Workflows.Scripts.CreateProduct
+      function: commit_and_push
+    output:
+      path: context.saved
+

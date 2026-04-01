@@ -12,27 +12,34 @@ Check what's currently active:
 - If no agent/team active, inform user to use `/activate` or `/team` first
 - If agent(s) active, proceed to add another
 
-## Step 2: Read the Registry
-
-Read `.claude/agents/registry.json` to see available agents.
-
-## Step 3: Identify Requested Agent
+## Step 2: Find the Agent
 
 The user requested to invite: **{{ARGS}}**
 
-Match this against the registry (by key or name).
+Search `.claude/agents/*.md` files for a matching agent:
+1. Match by filename (e.g., "tech-smith" matches `tech-smith.md`)
+2. Match by `name` field in frontmatter
+3. Partial match if no exact match found
 
-## Step 4: Load the Invited Agent
+## Step 3: Load the Invited Agent
 
-Read the agent file from the registry entry.
+Read the matching agent file. Parse the YAML frontmatter to get:
+- `name` - agent identifier
+- `summary` - brief description
+- `description` - full description (when to use)
+- `emoji` - display emoji
+- `domain` - knowledge domain
 
-## Step 5: Load Required Context (if specified)
+The rest of the file after the frontmatter is the agent's persona instructions.
 
-Check if the agent has a `required_context` field in the registry. If it does, read each file listed.
+## Step 4: Load Required Context (if specified)
+
+Check if the agent has a `Required Context` section with `@file/path` references.
+If found, read each referenced file.
 
 **Important:** If a required context file is missing, inform the user that the agent needs this file for effective guidance.
 
-## Step 6: Load Optional Context (if available)
+## Step 5: Load Optional Context (if available)
 
 Try to load optional context files from `.claude/context/`. These are user-specific and make agents more effective when present.
 
@@ -46,13 +53,13 @@ Try to load optional context files from `.claude/context/`. These are user-speci
 
 **Important:** Do NOT show errors if files are missing. This is expected and normal.
 
-## Step 7: Display Join Notification
+## Step 6: Display Join Notification
 
 Show a confirmation like:
 ```
 ➕ [emoji] Agent Name joined the conversation
 
-📋 Expertise: [description]
+📋 Expertise: [summary]
 📁 Domain: [domain]
 
 [If required context was loaded:]
@@ -64,7 +71,7 @@ Show a confirmation like:
 Now active: [List all current agents including the new one]
 ```
 
-## Step 8: Continue in Multi-Agent Mode
+## Step 7: Continue in Multi-Agent Mode
 
 **IMPORTANT**: For all subsequent messages in this conversation:
 

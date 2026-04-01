@@ -1,0 +1,65 @@
+name: review-privacy
+description: >
+  Privacy expert reviews the product definition for data protection compliance,
+  privacy risks, and regulatory requirements. Produces a privacy assessment with
+  compliance gaps and recommendations.
+version: "1.0.0"
+
+input:
+  product_name:
+    type: string
+    required: true
+    description: Human-readable name of the product
+  instruction:
+    type: string
+    required: false
+    description: Optional guidance for the review
+
+steps:
+  - name: privacy-review
+    type: ask_ai
+    description: Conduct privacy review of the product definition
+    config:
+      agent: privacy-guard
+      prompt: |
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        ## Task
+
+        Conduct a privacy review of this product's definition.
+
+        Read these documents:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/4-design-specification.md
+        - docs/product-definition/7-architecture-blueprint.md
+
+        Assess:
+        - GDPR/CCPA compliance
+        - Data minimization practices
+        - Consent architecture
+        - Data subject rights (access, deletion, portability)
+        - Retention policies
+        - Cross-border data transfers
+        - Privacy by Design assessment
+
+        For each finding, provide:
+        - Risk rating (Critical / High / Medium / Low)
+        - Description of the risk
+        - Recommendation to address it
+
+        ## Iteration Awareness
+
+        Check if docs/concept-validation/privacy-review.md already exists.
+        If it does, read it first and refine based on the user instruction.
+        Preserve what's still valid, update what needs to change.
+        Note revisions in a "## Revision Notes" section at the end.
+
+        ## Output
+
+        Save to: docs/concept-validation/privacy-review.md
+    output:
+      path: context.review
+    postconditions:
+      - type: file_exists
+        path: "docs/concept-validation/privacy-review.md"

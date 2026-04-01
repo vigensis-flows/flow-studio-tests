@@ -5,7 +5,9 @@ description: Designs app shell structure including header, footer, main content 
 
 # Designing App UI
 
-Establishes consistent app shell patterns for Phoenix LiveView applications using DaisyUI components.
+Establishes consistent app shell patterns using DaisyUI + Tailwind CSS. Default stack: Phoenix LiveView. Adapt for other stacks as needed.
+
+Describe capabilities, not implementations. Reference what the UI needs to do, not which specific library provides it.
 
 ## App Shell Structure
 
@@ -122,6 +124,31 @@ Padding/margins follow same scale: `p-2`, `p-4`, `p-6`, `p-8`.
 - Touch targets: Minimum 44px
 - Swipe gestures: Consider for navigation
 
+## First Moment Design
+
+Design the first 30 seconds of a new user's experience. This is not a separate onboarding flow — it is the product's introduction.
+
+For every app, define:
+- **What does the user see first?** The initial screen state (likely empty) must communicate what the product does and invite the first action.
+- **What does the user understand?** Within 30 seconds, the value proposition should be clear without reading documentation.
+- **What does the user do?** The first action should be obvious, low-commitment, and rewarding.
+
+The First Moment is the highest-leverage design surface. If users do not understand and act within the first 30 seconds, nothing else in the product matters.
+
+---
+
+## User Observability
+
+For each key screen, define what user behaviors to observe post-launch:
+
+| Screen | Behavior to Observe | Signal |
+|--------|---------------------|--------|
+| [Screen name] | [Action or pattern] | [What it tells us] |
+
+Design for observability means identifying — during design, not after launch — what behaviors indicate the experience is working or failing.
+
+---
+
 ## Validation Checklist
 
 - [ ] Header present with navigation
@@ -131,3 +158,5 @@ Padding/margins follow same scale: `p-2`, `p-4`, `p-6`, `p-8`.
 - [ ] Color palette from DaisyUI
 - [ ] Responsive breakpoints applied
 - [ ] Touch targets adequate for mobile
+- [ ] First Moment designed (first 30 seconds of new user experience)
+- [ ] Observable behaviors defined per key screen

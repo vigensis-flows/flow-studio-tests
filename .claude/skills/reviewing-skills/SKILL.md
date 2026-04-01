@@ -1,44 +1,21 @@
 ---
 name: reviewing-skills
-description: Reviews Claude Code skills for value and quality. Use when reviewing, checking, or auditing skills. Triggers: "review skill", "check skill", "audit skills", "is this skill worth keeping", "retire skill".
+description: Reviews agent skills for value, quality, and standard compliance. Use when reviewing, checking, or auditing skills. Triggers: "review skill", "check skill", "audit skills", "is this skill worth keeping", "retire skill".
 ---
 
 # Reviewing Skills
 
-Evaluates skills to determine if they provide genuine value, suggests improvements, and recommends retirement when skills no longer serve a purpose.
+Evaluates skills against the Agent Skills open standard (agentskills.io) and current best practices. Determines if skills provide genuine value, suggests improvements, and recommends retirement when skills no longer serve a purpose.
 
 ## Why Review Skills?
 
 Skills can become obsolete:
-- **Model improvements**: Claude now knows what the skill teaches
-- **Claude Code updates**: Native features replace custom workflows
+- **Model improvements**: The model now knows what the skill teaches
+- **Platform updates**: Native features replace custom workflows
 - **Redundancy**: Multiple skills cover same ground
 - **Scope creep**: Skill tries to do too much
 - **Context bloat**: Cost exceeds benefit
-
-Regular review prevents context waste and keeps skill collections focused.
-
----
-
-## Check: Written for Claude, Not Humans
-
-**Critical review criterion:** Skills must be written for Claude to consume, not for humans to read.
-
-**Red flags (human-oriented content):**
-- Explanatory prose ("This is useful because...")
-- Concepts Claude already knows (JSON, REST, common patterns)
-- Context-setting paragraphs with no actionable information
-- Friendly, tutorial-style tone
-
-**Green flags (Claude-oriented content):**
-- Imperative instructions: "Run X", "Check Y"
-- Specific commands with exact syntax
-- Schemas and examples without excessive explanation
-- Concise bullets over prose
-
-**Apply this test:** For each paragraph, ask "Would removing this hurt Claude's task performance?" If not, it should be removed.
-
-When reviewing, flag human-oriented content as a specific issue and recommend removal or rewrite.
+- **Standard drift**: Skill uses outdated patterns
 
 ---
 
@@ -57,23 +34,34 @@ skill-name/
 
 Note the skill's claimed purpose, triggers, and content.
 
-### Step 2: Check Current Best Practices
+### Step 2: Check Standard Compliance
 
-**Before evaluating, verify the skill against current Claude Code guidance.**
+Verify against the Agent Skills open standard and current best practices.
 
-1. Search for recent Claude Code skill changes (DO NOT trust training data)
-2. Check if Anthropic has updated skill documentation
-3. Compare skill structure against current recommendations
+**Frontmatter:**
+- `name` present, max 64 chars, lowercase + hyphens, matches directory
+- `description` present, max 1024 chars, third person, includes what + when
 
-**Why this matters:** Claude Code evolves rapidly. Skills created months ago may use outdated patterns, deprecated approaches, or miss new capabilities.
+**Structure:**
+- SKILL.md under 500 lines
+- References one level deep (no nested references)
+- Scripts in `scripts/`, references in `references/`, assets in `assets/`
 
-**Key areas to verify:**
-- YAML frontmatter schema (has it changed?)
-- Description best practices (trigger optimization)
-- Progressive disclosure patterns
-- Tool integration methods
+**Content quality (written for models, not humans):**
 
-Flag outdated patterns as issues requiring update.
+| Green Flag | Red Flag |
+|------------|----------|
+| Imperative instructions: "Run X", "Check Y" | Explanatory prose: "This is useful because..." |
+| Specific commands with exact syntax | Concepts the model already knows |
+| Schemas and examples | Context-setting paragraphs |
+| Concise bullets | Friendly tutorial-style tone |
+
+**Litmus test:** For each paragraph, ask "Would removing this hurt the model's task performance?" If not, it should be removed.
+
+**Platform portability:**
+- Core content uses only standard fields (`name`, `description`)
+- Claude Code extensions (`context`, `agent`, `model`, etc.) noted as non-portable
+- No hardcoded tool names (`mcp__context7`, `search_assets`)
 
 ### Step 3: Evaluate Value
 
@@ -81,23 +69,22 @@ Score each dimension (0-3):
 
 | Dimension | 0 (None) | 1 (Low) | 2 (Medium) | 3 (High) |
 |-----------|----------|---------|------------|----------|
-| **Unique knowledge** | Claude knows this | Minor additions | Significant context | Critical/proprietary |
+| **Unique knowledge** | Model knows this | Minor additions | Significant context | Critical/proprietary |
 | **Token efficiency** | Verbose, wasteful | Some bloat | Reasonably lean | Optimal |
 | **Practical utility** | Never triggers | Rare use | Regular use | Essential |
 | **Current relevance** | Outdated | Partially stale | Mostly current | Fully current |
+| **Standard compliance** | No frontmatter, wrong format | Partial compliance | Minor deviations | Fully compliant |
 
 **Total score interpretation:**
-- 10-12: Keep as-is
-- 7-9: Keep with improvements
-- 4-6: Consider major revision or merge
-- 0-3: Recommend retirement
+- 13-15: Keep as-is
+- 10-12: Keep with improvements
+- 6-9: Consider major revision or merge
+- 0-5: Recommend retirement
 
-### Step 3: Apply Value Tests
+### Step 4: Run Value Tests
 
-Run each test. Track failures.
-
-**Test 1: The "Claude Already Knows" Test**
-> Would Claude handle this task well WITHOUT the skill?
+**Test 1: The "Model Already Knows" Test**
+> Would the model handle this task well WITHOUT the skill?
 
 If yes → skill may not add value.
 
@@ -112,103 +99,83 @@ Calculate: SKILL.md lines + typical reference reads. If >500 lines for marginal 
 Vague descriptions = poor discovery = wasted skill.
 
 **Test 4: The "Redundancy" Test**
-> Does another skill or Claude Code feature cover this?
+> Does another skill or native feature cover this?
 
-Check for overlap with other skills and native features.
+Check for overlap with other skills and platform features.
 
-**Test 5: The "Last Updated" Test**
-> Does the skill reference outdated libraries, patterns, or versions?
+**Test 5: The "Freedom Match" Test**
+> Does instruction specificity match task fragility?
 
-Stale skills teach bad habits.
+High-freedom guidelines for flexible tasks. Exact scripts for fragile operations. Mismatched freedom = either brittle failures or unnecessary rigidity.
 
-### Step 4: Generate Recommendations
+**Test 6: The "Progressive Disclosure" Test**
+> Is content loaded at the right level?
 
-Based on evaluation, recommend one of:
+Metadata should be ~100 tokens. SKILL.md body under 5K tokens. Detailed content in `references/`. Scripts execute rather than load into context.
+
+### Step 5: Generate Recommendations
 
 | Recommendation | When to Use |
 |----------------|-------------|
-| **Keep** | Score 10+, passes all tests |
-| **Improve** | Score 7-9, minor issues identified |
-| **Revise** | Score 4-6, significant issues but core value exists |
+| **Keep** | Score 13+, passes all tests |
+| **Improve** | Score 10-12, minor issues identified |
+| **Revise** | Score 6-9, significant issues but core value exists |
 | **Merge** | Overlaps with another skill |
-| **Retire** | Score 0-3, fails multiple tests |
+| **Retire** | Score 0-5, fails multiple tests |
 
 ---
 
 ## Value Assessment Framework
 
-### What Makes a Skill Valuable?
+### High-Value Skills Provide
 
-**High-value skills provide:**
+1. **Proprietary knowledge** — Company schemas, internal APIs, business logic
+2. **Validated workflows** — Tested multi-step processes that prevent errors
+3. **Reusable scripts** — Code that would be rewritten each time
+4. **Domain expertise** — Specialized knowledge the model lacks
+5. **Guardrails** — Rules that prevent common mistakes
 
-1. **Proprietary knowledge** - Company schemas, internal APIs, business logic
-2. **Validated workflows** - Tested multi-step processes that prevent errors
-3. **Reusable scripts** - Code that would be rewritten each time
-4. **Domain expertise** - Specialized knowledge Claude lacks
-5. **Guardrails** - Rules that prevent common mistakes
+### Low-Value Skills Contain
 
-**Low-value skills contain:**
+1. **General knowledge** — Things the model already knows
+2. **Verbose explanations** — Over-explaining basic concepts
+3. **Obvious workflows** — Steps the model would naturally follow
+4. **Outdated content** — Deprecated libraries, old patterns
+5. **Redundant information** — Duplicates other skills or docs
 
-1. **General knowledge** - Things Claude already knows well
-2. **Verbose explanations** - Over-explaining basic concepts
-3. **Obvious workflows** - Steps Claude would naturally follow
-4. **Outdated content** - Deprecated libraries, old patterns
-5. **Redundant information** - Duplicates other skills or docs
-
-### Red Flags (Likely Low Value)
+### Red Flags
 
 - Explains what a common library does
-- Provides generic best practices Claude knows
-- Describes obvious file formats (JSON, YAML, etc.)
-- Contains no scripts, schemas, or unique content
+- Provides generic best practices the model knows
+- No scripts, schemas, or unique content
 - Description is vague ("helps with documents")
 - Body exceeds 500 lines with no references
 - No clear trigger conditions
-- Uses agent-noun naming (reviewer, builder) instead of gerund form
-- References external files that may move (tmp/, user directories)
-- Contains "Related Skills" section (creates unnecessary coupling)
+- Agent-noun naming (reviewer, builder) instead of gerund (reviewing, building)
+- References external files that may move
+- "Related Skills" section (unnecessary coupling)
+- Human-oriented prose meant for people, not models
 
-### Green Flags (Likely High Value)
+### Green Flags
 
 - Contains proprietary schemas or configs
 - Includes validated, tested scripts
 - Documents company-specific workflows
-- Provides internal API documentation
-- Has clear, specific trigger phrases
+- Clear, specific trigger phrases
 - Uses progressive disclosure effectively
-- Updated within last 6 months
-- Uses gerund naming (reviewing-x, processing-x)
 - Self-contained (examples inline or in references/)
-
----
-
-## Common Mistakes
-
-| Mistake | Fix |
-|---------|-----|
-| Reviewing without reading refs | Read all referenced files first |
-| Skipping value tests | Run all 5 tests, track failures |
-| No score justification | Document reasoning for each dimension |
-| Missing recommendation | Always end with Keep/Improve/Revise/Merge/Retire |
-| Forgetting token cost | Calculate SKILL.md + typical reference reads |
-| Ignoring naming convention | Check for gerund form (reviewing-x not x-reviewer) |
+- Gerund naming (reviewing-x, processing-x)
+- Freedom matches fragility
 
 ---
 
 ## Common Issues and Fixes
 
-### Issue: Verbose Explanations
+### Issue: Human-Oriented Content
 
-**Symptom:** Paragraphs explaining what Claude already knows.
+**Symptom:** Explanatory prose, tutorial tone, concepts the model knows.
 
-**Example of bloat:**
-```markdown
-JSON (JavaScript Object Notation) is a lightweight data format
-that is easy to read and write. It consists of key-value pairs
-enclosed in curly braces...
-```
-
-**Fix:** Delete. Claude knows JSON.
+**Fix:** Rewrite as imperative instructions. Apply the litmus test to each paragraph.
 
 ### Issue: Vague Description
 
@@ -221,33 +188,43 @@ enclosed in curly braces...
 description: Transform CSV files to JSON with validation. Use when converting spreadsheet exports, processing CSV uploads, or cleaning tabular data.
 ```
 
+### Issue: Missing Progressive Disclosure
+
+**Symptom:** Everything in SKILL.md, >500 lines.
+
+**Fix:** Move detailed content to `references/`. Keep SKILL.md as navigation + core workflow.
+
+### Issue: Freedom Mismatch
+
+**Symptom:** Vague guidelines for fragile operations, or rigid scripts for flexible tasks.
+
+**Fix:** Match specificity to fragility. Bundle scripts for deterministic operations. Use text guidelines for judgment-based tasks.
+
 ### Issue: Outdated Content
 
-**Symptom:** References deprecated libraries or old patterns.
+**Symptom:** References deprecated libraries, old patterns, or pre-standard format.
 
-**Fix:** Update or retire. Outdated skills teach bad habits.
+**Fix:** Update or retire. Check against current open standard.
 
 ### Issue: No Unique Content
 
-**Symptom:** Skill contains only general guidance Claude already knows.
-
-**Questions to ask:**
-- What does this skill provide that Claude doesn't already know?
+**Questions:**
+- What does this skill provide that the model doesn't already know?
 - Would removing this skill noticeably impact task quality?
 
 **Fix:** If no unique value → retire.
 
 ### Issue: Scope Creep
 
-**Symptom:** Skill tries to cover too many domains.
+**Symptom:** Skill covers too many domains.
 
 **Fix:** Split into focused skills or trim to core purpose.
 
-### Issue: Missing Progressive Disclosure
+### Issue: Non-Portable Extensions as Core
 
-**Symptom:** Everything in SKILL.md, >500 lines.
+**Symptom:** Skill depends on Claude Code-specific features (context: fork, hooks) in ways that make the core workflow non-portable.
 
-**Fix:** Move detailed content to references/.
+**Fix:** Ensure the core procedural knowledge works without platform extensions. Extensions enhance, not define.
 
 ### Issue: Wrong Naming Convention
 
@@ -255,29 +232,9 @@ description: Transform CSV files to JSON with validation. Use when converting sp
 
 **Fix:** Use gerund form (building-skills, processing-pdfs).
 
-### Issue: External Dependencies
-
-**Symptom:** References files outside the skill directory (tmp/, examples elsewhere).
-
-**Fix:** Move examples and content into skill's references/ or inline in SKILL.md. Skills should be self-contained.
-
-### Issue: Related Skills Section
-
-**Symptom:** Skill contains a "Related Skills" section listing other skills.
-
-**Problems:**
-- Creates coupling between skills
-- Becomes stale when skills are renamed/retired
-- Doesn't help Claude discover skills (descriptions do that)
-- Adds maintenance burden
-
-**Fix:** Remove the section entirely. If workflow order matters, use Prerequisites section instead (states what must exist, not what's related).
-
 ---
 
 ## Review Report Template
-
-After reviewing, provide structured feedback:
 
 ```markdown
 ## Skill Review: [skill-name]
@@ -285,24 +242,26 @@ After reviewing, provide structured feedback:
 ### Summary
 [1-2 sentence assessment]
 
-### Value Score: X/12
+### Value Score: X/15
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| Unique knowledge | X/3 | |
-| Token efficiency | X/3 | |
-| Practical utility | X/3 | |
-| Current relevance | X/3 | |
+| Unique knowledge | /3 | |
+| Token efficiency | /3 | |
+| Practical utility | /3 | |
+| Current relevance | /3 | |
+| Standard compliance | /3 | |
 
 ### Test Results
 
 | Test | Pass/Fail | Notes |
 |------|-----------|-------|
-| Claude Already Knows | | |
+| Model Already Knows | | |
 | Token Cost | | |
 | Trigger Clarity | | |
 | Redundancy | | |
-| Last Updated | | |
+| Freedom Match | | |
+| Progressive Disclosure | | |
 
 ### Issues Found
 1. [Issue with suggested fix]
@@ -321,7 +280,7 @@ After reviewing, provide structured feedback:
 
 When reviewing multiple skills:
 
-1. **List all skills** with line counts
+1. **List all skills** with line counts and reference counts
 2. **Quick triage** using red/green flags
 3. **Deep review** high-value candidates
 4. **Identify overlaps** for potential merges
@@ -334,9 +293,9 @@ See [references/batch-review.md](references/batch-review.md) for batch review te
 ## When to Retire a Skill
 
 Retire when:
-- Score 0-3 on value assessment
+- Score 0-5 on value assessment
 - Fails 3+ value tests
-- Claude handles task equally well without skill
+- Model handles task equally well without skill
 - Content is significantly outdated
 - Duplicate of another skill or native feature
 - Not triggered in months of actual use
@@ -353,22 +312,15 @@ Retire when:
 
 **Before completing a review:**
 - [ ] Read SKILL.md and all referenced files
-- [ ] Scored all 4 dimensions (0-3 each)
-- [ ] Ran all 5 value tests
+- [ ] Checked standard compliance (frontmatter, structure, content quality)
+- [ ] Scored all 5 dimensions (0-3 each)
+- [ ] Ran all 6 value tests
 - [ ] Documented issues with suggested fixes
 - [ ] Provided clear recommendation (Keep/Improve/Revise/Merge/Retire)
-- [ ] Used review report template for consistency
+- [ ] Used review report template
 
 **For batch reviews:**
 - [ ] Listed all skills with line counts
 - [ ] Applied red/green flag triage
 - [ ] Identified overlaps for potential merges
 - [ ] Generated summary with action items
-
----
-
-## Additional Resources
-
-### Reference Files
-- **[references/batch-review.md](references/batch-review.md)** - Template for reviewing skill collections
-- **[references/capability-baseline.md](references/capability-baseline.md)** - What Claude knows natively (for comparison)

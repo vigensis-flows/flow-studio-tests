@@ -1,0 +1,171 @@
+name: plan-and-build
+description: Plan the increment, build, assess, and improve the MVP
+version: "1.0.0"
+
+input:
+  product_name:
+    type: string
+    required: true
+    description: Human-readable name of the product
+  instruction:
+    type: string
+    required: false
+    description: Optional user instruction for additional guidance
+  tech_stack:
+    type: string
+    required: false
+    default: "elixir"
+    description: "Tech stack for agent selection. Default: elixir"
+
+steps:
+  # Step 1: Create the increment plan — agent selected by tech stack
+  - name: plan
+    type: if
+    description: Create the increment plan with stack-appropriate agent
+    config:
+      condition:
+        field: input.tech_stack
+        operator: equals
+        value: elixir
+      then:
+        name: plan-elixir
+        type: ask_ai
+        description: Create increment plan using Elixir/Ash expertise
+        config:
+          agent: elixir-alchemist
+          prompt: |
+            /creating-increments {{input.product_name | slug}}
+
+            Create the v1 increment plan for this Elixir/Phoenix/Ash MVP.
+            Read all product docs in docs/product-definition/.
+            User instruction (if any): {{input.instruction}}
+      else:
+        name: plan-generic
+        type: ask_ai
+        description: Create increment plan using general engineering expertise
+        config:
+          agent: tech-smith
+          prompt: |
+            /creating-increments {{input.product_name | slug}}
+
+            Create the v1 increment plan for this MVP.
+            Read all product docs in docs/product-definition/.
+            User instruction (if any): {{input.instruction}}
+    output:
+      path: context.plan
+
+  # Step 2: Review the plan
+  - name: review-plan
+    type: ask_ai
+    description: Quality Guardian reviews the increment plan
+    config:
+      agent: quality-guardian
+      prompt: |
+        /reviewing-increments plan
+
+        Review the increment plan for {{input.product_name}}.
+        Find the increment document in docs/increments/ for this product.
+    output:
+      path: context.plan_review
+
+  # Step 3: Build — agent selected by tech stack
+  - name: build
+    type: if
+    description: Execute the build plan with stack-appropriate agent
+    config:
+      condition:
+        field: input.tech_stack
+        operator: equals
+        value: elixir
+      then:
+        name: build-elixir
+        type: ask_ai
+        description: Build the MVP using Elixir/Ash expertise
+        config:
+          agent: elixir-alchemist
+          prompt: |
+            /building-increments {{input.product_name | slug}}
+
+            Execute the build plan for this Elixir/Phoenix/Ash MVP.
+            Read the increment document and all product docs.
+            User instruction (if any): {{input.instruction}}
+      else:
+        name: build-generic
+        type: ask_ai
+        description: Build the MVP using general engineering expertise
+        config:
+          agent: tech-smith
+          prompt: |
+            /building-increments {{input.product_name | slug}}
+
+            Execute the build plan for this MVP.
+            Read the increment document and all product docs.
+            User instruction (if any): {{input.instruction}}
+    output:
+      path: context.build
+
+  # Step 4: Assess the delivery
+  - name: assess
+    type: ask_ai
+    description: Quality Guardian reviews the delivery
+    config:
+      agent: quality-guardian
+      prompt: |
+        /reviewing-increments delivery
+
+        Review the delivery for {{input.product_name}}.
+        Assess what was built against the increment plan.
+        Identify improvement opportunities.
+    output:
+      path: context.assessment
+
+  # Step 5: Improve — agent selected by tech stack
+  - name: improve
+    type: if
+    description: Execute improvements with stack-appropriate agent
+    config:
+      condition:
+        field: input.tech_stack
+        operator: equals
+        value: elixir
+      then:
+        name: improve-elixir
+        type: ask_ai
+        description: Implement improvements using Elixir/Ash expertise
+        config:
+          agent: elixir-alchemist
+          prompt: |
+            /building-increments improve {{input.product_name | slug}}
+
+            Execute improvements identified in the assessment.
+            Read the assessment and increment document.
+            User instruction (if any): {{input.instruction}}
+      else:
+        name: improve-generic
+        type: ask_ai
+        description: Implement improvements using general engineering expertise
+        config:
+          agent: tech-smith
+          prompt: |
+            /building-increments improve {{input.product_name | slug}}
+
+            Execute improvements identified in the assessment.
+            Read the assessment and increment document.
+            User instruction (if any): {{input.instruction}}
+    output:
+      path: context.improvements
+
+  # Step 6: Final review
+  - name: finalize
+    type: ask_ai
+    description: Quality Guardian conducts final review
+    config:
+      agent: quality-guardian
+      prompt: |
+        /reviewing-increments final
+
+        Conduct final review of {{input.product_name}} MVP.
+        Verify all improvements were implemented.
+        Confirm the product is ready for user review.
+    output:
+      path: context.final_review

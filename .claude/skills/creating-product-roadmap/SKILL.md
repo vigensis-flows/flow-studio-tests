@@ -1,7 +1,18 @@
 ---
 name: creating-product-roadmap
-description: Creates product roadmap documents with outcome-focused Now/Next/Later horizons. Use when user asks to "create a roadmap", "define what we're building", or after completing product vision and strategy. Also use when scoping MVP or planning increments.
+description: >
+  DEPRECATED for initial product definitions: The roadmap is now the
+  Now/Next/Later section within creating-product-strategy. A separate roadmap
+  document becomes useful later when the team is actively tracking progress
+  across discovery iterations — but for the initial definition, it's part
+  of Strategy. This skill is kept for standalone roadmap creation outside
+  the product definition workflow.
 ---
+
+> **DEPRECATED for initial product definitions**: The roadmap is now the
+> Now/Next/Later section within `creating-product-strategy`. This skill
+> remains available for standalone roadmap creation outside the product
+> definition workflow, but is not used in `create-product-definition`.
 
 # Creating Product Roadmap
 

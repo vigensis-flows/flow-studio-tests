@@ -1,0 +1,374 @@
+name: create-product-definition
+description: >
+  The Product Team creates the initial Product Definition, defining what to build,
+  how it works, and how to win. This is the starting point of discovery.
+  Designed for re-running: if documents already exist, the team refines
+  them based on the user instruction rather than starting from scratch.
+version: "2.0.0"
+
+input:
+  product_name:
+    type: string
+    required: true
+    description: Human-readable name of the product
+  instruction:
+    type: string
+    required: false
+    description: >
+      Optional user instruction passed to every step. Use for focus areas,
+      constraints, preferences, or feedback from a previous iteration.
+      Examples: "Focus on solo founders first", "The pricing was too high,
+      try $29/mo", "Simplify the onboarding — too many steps"
+  tech_stack:
+    type: string
+    required: false
+    default: "elixir"
+    description: >
+      Tech stack for the MVP. Determines which agent handles architecture.
+      Default: "elixir" (Elixir/Phoenix/Ash). Override for other stacks.
+
+steps:
+
+  - name: create-mvp-brief
+    type: run-workflow
+    description: >
+      The Product Team — PM, Designer, Tech Lead, and Business Architect —
+      analyzes your research, explores viable options, and defines your MVP Brief
+    config:
+      workflow: create-mvp-brief
+      input:
+        product_name: "{{input.product_name}}"
+        instruction: "{{input.instruction}}"
+      inherit_context: true
+
+  - name: create-product-vision
+    type: ask_ai
+    description: >
+      The Product Manager articulates your product vision — the north star
+      that guides every decision about what to build and why
+    config:
+      agent: product-maestro
+      prompt: |
+        /creating-product-vision {{input.product_name | slug}}
+
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        Read the MVP Brief at docs/product-definition/1-mvp-brief.md.
+        Create the product vision that extends the MVP's bet into a
+        3-5 year aspirational end state.
+
+        Include a Product Personality section — how the product feels
+        to use (opinionated vs flexible, professional vs approachable,
+        autonomous vs collaborative).
+
+        ## Output
+
+        Save to: docs/product-definition/2-product-vision.md
+    output:
+      path: context.vision
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/2-product-vision.md"
+
+  - name: define-product-strategy
+    type: ask_ai
+    description: >
+      The Product Manager and Business Architect define how you win —
+      target market, go-to-market, competitive positioning, business
+      model, and roadmap
+    config:
+      agent: product-maestro
+      prompt: |
+        /creating-product-strategy {{input.product_name | slug}}
+
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        Read the MVP Brief and Vision:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/2-product-vision.md
+
+        Expand the MVP Brief's business model hypothesis into a full
+        strategy. Include an Architecture Implications subsection in the
+        Business Model section (multi-tenancy, feature gating, metering,
+        compute budget) — the architect needs this downstream.
+
+        The Roadmap section uses Now/Next/Later horizons. The Now section
+        must align with the MVP Brief's scope.
+
+        ## Output
+
+        Save to: docs/product-definition/3-product-strategy.md
+    output:
+      path: context.strategy
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/3-product-strategy.md"
+
+  - name: design-user-experience
+    type: ask_ai
+    description: >
+      The Designer defines how your product works — user flows,
+      screen inventory, interaction patterns, and the First Moment
+    config:
+      agent: design-shaper
+      prompt: |
+        /creating-design-specification {{input.product_name | slug}}
+
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        Read the MVP Brief, Vision, and Strategy:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/2-product-vision.md
+        - docs/product-definition/3-product-strategy.md
+
+        Create a comprehensive design specification covering:
+        conceptual model, user flows, screen inventory, information
+        architecture, interaction patterns, state design for every
+        screen, a detailed First Moment, and observable behaviors.
+
+        This document is the backbone — Visual, Content, and Architecture
+        all build from it.
+
+        ## Output
+
+        Save to: docs/product-definition/4-design-specification.md
+    output:
+      path: context.design
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/4-design-specification.md"
+
+  - name: design-visuals
+    type: ask_ai
+    description: >
+      The Visual Designer defines how your product looks — theme,
+      colors, typography, component styling, and screen compositions
+    config:
+      agent: visual-designer
+      prompt: |
+        /creating-visual-design {{input.product_name | slug}}
+
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        Create the visual design specification based on the MVP Brief,
+        Vision, and Design Specification.
+
+        Input documents:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/2-product-vision.md
+        - docs/product-definition/4-design-specification.md
+
+        Translate the product personality from the Vision and the screen
+        inventory from the Design Spec into a concrete visual system.
+
+        ## Output
+
+        Save to: docs/product-definition/5-visual-specification.md
+    output:
+      path: context.visual
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/5-visual-specification.md"
+
+  - name: create-content
+    type: ask_ai
+    description: >
+      The Content Writer defines what your product says — voice, tone,
+      value proposition, microcopy, error messages, and key page content
+    config:
+      agent: content-writer
+      prompt: |
+        /creating-content-spec {{input.product_name | slug}}
+
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        Create the content specification based on the MVP Brief, Vision,
+        Strategy, and Design Specification.
+
+        Input documents:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/2-product-vision.md
+        - docs/product-definition/3-product-strategy.md
+        - docs/product-definition/4-design-specification.md
+
+        Write all copy — not descriptions of copy. Every label, every
+        empty state, every error message should be actual text a user
+        would see.
+
+        ## Output
+
+        Save to: docs/product-definition/6-content-specification.md
+    output:
+      path: context.content
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/6-content-specification.md"
+
+  - name: design-architecture
+    type: if
+    description: >
+      The Tech Lead defines how to build it — domain model, data design,
+      and technical decisions that affect multiple components
+    config:
+      condition:
+        field: input.tech_stack
+        operator: equals
+        value: elixir
+      then:
+        name: design-elixir-architecture
+        type: ask_ai
+        description: Create architecture using Elixir/Ash expertise
+        config:
+          agent: elixir-alchemist
+          prompt: |
+            /creating-architecture {{input.product_name | slug}}
+
+            Product name: {{input.product_name}}
+            User instruction: {{input.instruction}}
+
+            Create the architecture blueprint for this Elixir/Phoenix/Ash MVP.
+
+            Input documents (read in this order):
+            - docs/product-definition/1-mvp-brief.md
+            - docs/product-definition/2-product-vision.md
+            - docs/product-definition/3-product-strategy.md
+            - docs/product-definition/4-design-specification.md
+
+            Pay special attention to the Strategy's Architecture Implications
+            section (multi-tenancy, feature gating, metering, compute budget)
+            and the Design Spec's Observable Behaviors section.
+
+            Do NOT read visual or content specs — those are build-time concerns.
+
+            ## Output
+
+            Save to: docs/product-definition/7-architecture-blueprint.md
+      else:
+        name: design-generic-architecture
+        type: ask_ai
+        description: Create architecture using general engineering expertise
+        config:
+          agent: tech-smith
+          prompt: |
+            /creating-architecture {{input.product_name | slug}}
+
+            Product name: {{input.product_name}}
+            User instruction: {{input.instruction}}
+
+            Create the architecture blueprint for this MVP.
+
+            Input documents (read in this order):
+            - docs/product-definition/1-mvp-brief.md
+            - docs/product-definition/2-product-vision.md
+            - docs/product-definition/3-product-strategy.md
+            - docs/product-definition/4-design-specification.md
+
+            Pay special attention to the Strategy's Architecture Implications
+            section and the Design Spec's Observable Behaviors section.
+
+            Do NOT read visual or content specs — those are build-time concerns.
+
+            ## Output
+
+            Save to: docs/product-definition/7-architecture-blueprint.md
+    output:
+      path: context.architecture
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/7-architecture-blueprint.md"
+
+  - name: review-product-definition
+    type: ask_ai
+    description: >
+      Final proof-read of all documents as a package — fixes minor
+      inconsistencies and flags anything substantive for your review
+    config:
+      agent: product-maestro
+      prompt: |
+        /reviewing-product-definition {{input.product_name | slug}}
+
+        Product name: {{input.product_name}}
+
+        Read all 7 product definition documents as a package:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/2-product-vision.md
+        - docs/product-definition/3-product-strategy.md
+        - docs/product-definition/4-design-specification.md
+        - docs/product-definition/5-visual-specification.md
+        - docs/product-definition/6-content-specification.md
+        - docs/product-definition/7-architecture-blueprint.md
+
+        Fix minor textual issues (repetition, terminology inconsistencies,
+        language tightening) directly in the documents.
+
+        Produce a brief coherence report flagging anything substantive
+        that needs human attention.
+
+        ## Output
+
+        Save report to: docs/product-definition/working/coherence-report.md
+    output:
+      path: context.review
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/working/coherence-report.md"
+
+  - name: pressure-test-product-definition
+    type: ask_ai
+    description: >
+      The Venture Critic stress-tests your product definition — challenging
+      the bet, the business model, the scope, and the hypotheses before
+      you commit to building
+    config:
+      agent: venture-critic
+      prompt: |
+        /pressure-testing-product-definition {{input.product_name | slug}}
+
+        Product name: {{input.product_name}}
+
+        Read the reality check from the Product Brief phase:
+        - docs/product-brief/7-reality-check.md
+
+        Then read all 7 product definition documents:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/2-product-vision.md
+        - docs/product-definition/3-product-strategy.md
+        - docs/product-definition/4-design-specification.md
+        - docs/product-definition/5-visual-specification.md
+        - docs/product-definition/6-content-specification.md
+        - docs/product-definition/7-architecture-blueprint.md
+
+        Conduct independent research — competitor moves, pricing evidence,
+        failure precedents. Do not just critique from the armchair.
+
+        Apply the six pressure points: the bet, scope honesty, model
+        survivability, hypothesis theater, coherence under stress, and
+        time-to-signal.
+
+        Produce a clear signal: PROCEED, ITERATE, or RECONSIDER.
+
+        ## Output
+
+        Save to: docs/product-definition/8-pressure-test.md
+    output:
+      path: context.pressure_test
+    postconditions:
+      - type: file_exists
+        path: "docs/product-definition/8-pressure-test.md"
+
+  - name: save-product-definition
+    type: run_script
+    config:
+      module: FlowStudio.Workflows.Scripts.CreateProduct
+      function: commit_and_push_definition
+
+  - name: activate-product-definition
+    type: run_script
+    config:
+      module: FlowStudio.Workflows.Scripts.CreateProduct
+      function: set_discovery_state

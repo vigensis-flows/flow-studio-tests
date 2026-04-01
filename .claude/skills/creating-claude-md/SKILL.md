@@ -149,7 +149,7 @@ Personal project-specific preferences (gitignored):
 # Local Preferences
 
 ## My Sandbox
-- API URL: http://localhost:4000
+- API URL: http://localhost:4100
 - Test user: dev@example.com
 
 ## My Shortcuts

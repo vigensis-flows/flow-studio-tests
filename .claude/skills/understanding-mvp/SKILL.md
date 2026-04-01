@@ -1,7 +1,15 @@
 ---
 name: understanding-mvp
-description: Product Trio conducts structured discovery rounds to understand what the MVP should be. Analyzes input, discovers questions, validates assumptions through research, and converges on scope. Use when starting MVP creation to build shared understanding before creating product documents.
+description: >
+  DEPRECATED: Replaced by the create-mvp-brief sub-workflow which decomposes
+  this into 3 focused steps: synthesizing-product-research, exploring-mvp-options,
+  and writing-mvp-brief. The new pipeline adds Business Architect as a 4th
+  perspective and produces better results through structured decomposition.
 ---
+
+> **DEPRECATED**: Replaced by the `create-mvp-brief` sub-workflow (3 steps:
+> `synthesizing-product-research` → `exploring-mvp-options` → `writing-mvp-brief`).
+> This skill is kept for reference only.
 
 # Understanding MVP
 
@@ -34,7 +42,7 @@ All three perspectives required for complete understanding.
 |-------|--------|----------|
 | **Product Name** | product-context.md | Yes |
 | **Description** | product-context.md | No |
-| **Input Digest** | processing-mvp-input | If files provided |
+| **Input Digest** | processing-provided-materials | If files provided |
 
 ---
 
@@ -44,31 +52,22 @@ All three perspectives required for complete understanding.
 
 Each round follows this pattern:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ ROUND N                                                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. PERSPECTIVE SHARING                                         │
-│     PM:       Problem space, value hypothesis, business fit     │
-│     Designer: User needs, experience vision, usability risks    │
-│     Tech Lead: Feasibility, architecture, technical risks       │
-│                                                                 │
-│  2. DISCOVERY                                                   │
-│     - What questions emerged?                                   │
-│     - What assumptions are we making?                           │
-│     - What needs research to answer?                            │
-│                                                                 │
-│  3. RESEARCH (parallel)                                         │
-│     - Spawn deep-research tasks for answerable questions        │
-│     - Integrate research findings into discussion               │
-│                                                                 │
-│  4. CONVERGENCE CHECK                                           │
-│     - Do we have enough understanding to create product docs?   │
-│     - Are there blocking questions only stakeholders can answer?│
-│     - Do we need another round?                                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A[Round N Start] --> B[1. Perspective Sharing]
+    B --> B1["PM: Problem space, value hypothesis, business fit"]
+    B --> B2["Designer: User needs, experience vision, usability risks"]
+    B --> B3["Tech Lead: Feasibility, architecture, technical risks"]
+    B1 & B2 & B3 --> C[2. Discovery]
+    C --> C1["What questions emerged?"]
+    C --> C2["What assumptions are we making?"]
+    C --> C3["What needs research to answer?"]
+    C1 & C2 & C3 --> D[3. Research — parallel]
+    D --> D1["Spawn deep-research tasks"]
+    D --> D2["Integrate findings into discussion"]
+    D1 & D2 --> E{4. Convergence Check}
+    E -->|Sufficient understanding| F[Ready for product docs]
+    E -->|Blocking questions remain| G[Next round or escalate]
 ```
 
 ### Convergence Rules
@@ -78,6 +77,7 @@ Each round follows this pattern:
 | Sufficient understanding | Converge → Ready for product docs |
 | Blocking questions, rounds < max | Continue to next round |
 | Blocking questions, rounds = max | Escalate → Create stakeholder questions |
+| Revenue signal undefined | Do not converge until PM can articulate how this MVP reaches revenue (pricing, trial-to-paid, or behavioral proxy) |
 
 Default max rounds: 5 (configurable)
 
@@ -107,7 +107,7 @@ Default max rounds: 5 (configurable)
 - Is this technically feasible?
 - What's the likely architecture?
 - What are the technical risks?
-- What technologies should we use?
+- What capabilities does the architecture need?
 - What's complex vs. straightforward?
 
 **Output:**
@@ -162,7 +162,8 @@ When team is ready to converge, confirm:
 2. **User clarity**: Do we know who we're building for?
 3. **Value clarity**: Do we know why they'd use/pay for this?
 4. **Feasibility clarity**: Do we know we can build this?
-5. **Scope clarity**: Do we have a sense of Now vs Later?
+5. **Scope clarity**: Do we have a sense of Now vs Later? Have we applied the MVP Scope Test (Minimum AND Viable AND Product) to each proposed feature?
+6. **Revenue clarity**: Do we know how this MVP reaches revenue signal? (Direct pricing, trial-to-paid, behavioral proxy, or explicit justification for delay)
 
 If yes to all → Ready for product documents
 If no → Either continue rounds or escalate blocking questions
@@ -338,7 +339,7 @@ Product Trio:
 **Value:**
 - Why would someone pay for this?
 - What would make them choose this over alternatives?
-- What's the minimum to deliver value?
+- What's the minimum to deliver value? Apply the MVP Scope Test (Minimum AND Viable AND Product) to each proposed feature.
 
 **Users:**
 - Who has this problem most acutely?
@@ -371,22 +372,18 @@ When research returns:
 
 The Trio works together, not in silos:
 
-```
-Round Start
-    │
-    ├── PM shares perspective
-    │   └── Designer and Tech Lead ask clarifying questions
-    │
-    ├── Designer shares perspective
-    │   └── PM and Tech Lead ask clarifying questions
-    │
-    ├── Tech Lead shares perspective
-    │   └── PM and Designer ask clarifying questions
-    │
-    ├── Joint discussion
-    │   └── Synthesize, identify tensions, resolve or flag
-    │
-    └── Convergence check (joint decision)
+```mermaid
+flowchart TD
+    A[Round Start] --> B["PM shares perspective"]
+    B --> B1["Designer & Tech Lead ask clarifying questions"]
+    B1 --> C["Designer shares perspective"]
+    C --> C1["PM & Tech Lead ask clarifying questions"]
+    C1 --> D["Tech Lead shares perspective"]
+    D --> D1["PM & Designer ask clarifying questions"]
+    D1 --> E["Joint discussion: synthesize, identify tensions, resolve or flag"]
+    E --> F{"Convergence check (joint decision)"}
+    F -->|Converged| G[Ready for product docs]
+    F -->|Not converged| A
 ```
 
 ### Healthy Tension
@@ -413,6 +410,20 @@ Tension is good. It surfaces issues early.
 
 ---
 
+## Quality Standards
+
+### Vocabulary Rule
+
+Use current terminology in all output:
+
+| Do Not Use | Use Instead |
+|------------|-------------|
+| Sprint | Iteration, increment |
+| Usability test (as validation method) | Behavioral observation |
+| Technical spike (as separate phase) | Address early in the build |
+| Design sprint | Build iteration |
+| Validate before building | Build to validate |
+
 ## Success Criteria
 
 The understanding-mvp skill succeeds when:
@@ -421,6 +432,7 @@ The understanding-mvp skill succeeds when:
 - [ ] Key questions identified and addressed
 - [ ] Assumptions made explicit
 - [ ] Research conducted for answerable questions
+- [ ] Revenue signal defined (pricing, trial-to-paid, or behavioral proxy)
 - [ ] Sufficient understanding to create product documents
 - [ ] Either converged or cleanly escalated with stakeholder questions
 - [ ] Discovery Log captures the journey

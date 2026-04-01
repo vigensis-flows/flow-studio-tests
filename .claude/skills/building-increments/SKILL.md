@@ -244,13 +244,11 @@ Best for: Steps that are truly independent (e.g., 3a and 3b both depend on 2 but
 
 ## Improvement Phase Execution
 
-When executing Improvement Plan (Step 9 of implementing-features):
-
-Same process, but:
-- **Input**: Improvement Plan (not Build Plan)
-- **Focus**: Refinement, not new functionality
-- **Quality bar**: Higher - addressing known issues
-- **Scope**: Approved improvements only
+Same process as Deliver, with equal scope and rigor:
+- **Input**: Improvement Plan (from Assess phase)
+- **Scope**: All approved improvements — these are often substantial
+- **Effort**: Equal to Deliver. Improvements are real execution, not polish.
+- **Quality bar**: Same as Deliver — tests, verification, completion
 
 ---
 

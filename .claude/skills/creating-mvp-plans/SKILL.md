@@ -120,9 +120,13 @@ List the minimum features needed to:
 - Enable customers to pay
 - Generate learnings from real usage
 
-**Scope test**: For each feature, ask "Can we launch without this?"
-- If yes → cut it
-- If no → keep it
+**MVP Scope Test**: Evaluate every proposed feature against three dimensions. All three must pass for a feature to stay in scope:
+
+| Dimension | Question | Fail = Cut |
+|-----------|----------|------------|
+| **Minimum** | Does this test a hypothesis or fulfill a legal/trust obligation? | Not testing anything, not legally required |
+| **Viable** | Would a paying customer accept this as a real product without it? | Customers would not consider this a real product |
+| **Product** | Can a user accomplish the core job without this? | Core job is impossible without it |
 
 ### Step 3: Identify Technical Components
 
@@ -322,21 +326,19 @@ After creating the MVP Plan, use `creating-increments` to create the first incre
 
 The MVP Plan defines phases. The first increment executes those phases:
 
-```
-MVP Plan
-├── Phase 1: Foundation
-├── Phase 2: Core Features
-├── Phase 3: Integration
-├── Phase 4: Quality
-└── Phase 5: Deployment
-        ↓
-[creating-increments]
-        ↓
-Increment: [name]-v1.md
-├── Goal: Ship v0.1.0 MVP
-├── Success Criteria: From MVP Brief + Strategy
-├── Build Plan: Combine phases into executable steps
-└── PDAI structure for execution
+```mermaid
+flowchart TD
+    A["MVP Plan"] --> A1["Phase 1: Foundation"]
+    A --> A2["Phase 2: Core Features"]
+    A --> A3["Phase 3: Integration"]
+    A --> A4["Phase 4: Quality"]
+    A --> A5["Phase 5: Deployment"]
+    A5 --> B["creating-increments"]
+    B --> C["Increment: name-v1.md"]
+    C --> C1["Goal: Ship v0.1.0 MVP"]
+    C --> C2["Success Criteria: From MVP Brief + Strategy"]
+    C --> C3["Build Plan: Combine phases into steps"]
+    C --> C4["PDAI structure for execution"]
 ```
 
 ### Increment Creation Steps
@@ -399,20 +401,14 @@ For MVP creation workflow:
 
 When used within the `creating-mvp` workflow:
 
-```
-[MVP Brief] + [Vision] + [Strategy]
-        ↓
-[creating-mvp-plans]
-        ↓
-MVP Plan (docs/products/[name]/mvp-plan.md)
-        ↓
-[creating-increments]
-        ↓
-Increment (docs/increments/[name]-v1.md)
-        ↓
-[building-increments]
-        ↓
-Working v0.1.0
+```mermaid
+flowchart TD
+    A["MVP Brief + Vision + Strategy"] --> B["creating-mvp-plans"]
+    B --> C["MVP Plan (docs/product-definition/mvp-plan.md)"]
+    C --> D["creating-increments"]
+    D --> E["Increment (docs/increments/name-v1.md)"]
+    E --> F["building-increments"]
+    F --> G["Working v0.1.0"]
 ```
 
 The MVP Plan provides the blueprint; the Increment provides the executable plan.
@@ -425,7 +421,7 @@ Before finalizing plan:
 
 **Scope:**
 - [ ] MVP scope is truly minimum
-- [ ] Each feature passes "can we launch without this?" test
+- [ ] Each feature passes the MVP Scope Test (Minimum AND Viable AND Product)
 - [ ] Scope aligns with strategy document
 
 **Structure:**

@@ -122,7 +122,7 @@ Then configure Claude Code's MCP by creating `.claude/.mcp.json`:
 {
   "tidewave": {
     "type": "http",
-    "url": "http://localhost:4000/tidewave/mcp"
+    "url": "http://localhost:4101/tidewave/mcp"
   }
 }
 ```
@@ -380,9 +380,9 @@ mix igniter.upgrade ash ash_postgres ash_phoenix
 
 ---
 
-## Related Skills
+## Related
 
-- **using-elixir-phoenix-ash** - Stack patterns and documentation sources
+- See `AGENTS.md` for stack patterns and Context7 library IDs
 
 ---
 

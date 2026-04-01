@@ -1,11 +1,11 @@
 ---
 name: reviewing-claude-md
-description: Reviews CLAUDE.md files for quality, placement, and coherence. Use when reviewing, checking, or auditing CLAUDE.md configuration. Triggers: "review CLAUDE.md", "check config", "audit instructions", "are my CLAUDE files organized".
+description: Reviews CLAUDE.md and AGENTS.md files for quality, placement, and coherence. Use when reviewing, checking, or auditing agent instruction files. Triggers: "review CLAUDE.md", "check config", "audit instructions", "are my CLAUDE files organized".
 ---
 
-# Reviewing CLAUDE.md Files
+# Reviewing Agent Instruction Files
 
-Evaluates CLAUDE.md configurations for proper placement, duplication, contradictions, and focus.
+Evaluates CLAUDE.md (for Claude Code) and AGENTS.md (for other agents) for proper placement, duplication, contradictions, focus, and content quality.
 
 ---
 
@@ -35,14 +35,15 @@ When reviewing, flag human-oriented content and recommend rewrite to direct inst
 
 ### Step 1: Discover All Files
 
-Identify all CLAUDE.md files in the tree:
+Identify all agent instruction files in the tree:
 
 ```bash
-# Global
+# Global (Claude Code)
 ls -la ~/.claude/CLAUDE.md 2>/dev/null
 
 # Project root
-ls -la ./CLAUDE.md ./.claude/CLAUDE.md 2>/dev/null
+ls -la ./CLAUDE.md ./AGENTS.md ./CLAUDE.template.md 2>/dev/null
+ls -la ./.claude/CLAUDE.md 2>/dev/null
 
 # Local override
 ls -la ./CLAUDE.local.md 2>/dev/null
@@ -50,6 +51,12 @@ ls -la ./CLAUDE.local.md 2>/dev/null
 # Rules
 find .claude/rules -name "*.md" 2>/dev/null
 ```
+
+**File purposes:**
+- `CLAUDE.md` - Instructions for Claude Code (has MCP tools like Context7, Tidewave)
+- `AGENTS.md` - Instructions for other agents (Copilot, Cursor, Codeium - no MCP)
+- `CLAUDE.template.md` - Template for new repos with same stack
+- `CLAUDE.local.md` - Machine-specific overrides (gitignored)
 
 Or use `/memory` command to see what Claude has loaded.
 
@@ -89,7 +96,7 @@ For each instruction, check placement is appropriate:
 - 1: Significant misplacement
 - 0: Most instructions wrong level
 
-### Step 3: Check for Duplications
+### Step 4: Check for Duplications
 
 Compare content across all files. Flag:
 
@@ -105,7 +112,7 @@ Compare content across all files. Flag:
 - 1: Multiple duplications
 - 0: Heavily duplicated
 
-### Step 4: Check for Contradictions
+### Step 5: Check for Contradictions
 
 Look for conflicting instructions between levels:
 
@@ -123,13 +130,13 @@ Look for conflicting instructions between levels:
 - 1: Some conflicts
 - 0: Major contradictions
 
-### Step 5: Evaluate Focus and Size
+### Step 6: Evaluate Focus and Size
 
 Each file should be focused, lean, and within size limits:
 
 | Focus Issue | Symptom | Fix |
 |-------------|---------|-----|
-| **Oversized** | >300 lines total | Split into rules/ files or nested CLAUDE.md |
+| **Oversized** | >500 lines total | Split into rules/ files or nested CLAUDE.md |
 | **Too many instructions** | >150 instructions | Prioritize, remove obvious |
 | **Bloated** | >100 lines, many topics | Split into rules/ files |
 | **Unfocused** | Mixes concerns | Reorganize by topic |
@@ -138,15 +145,20 @@ Each file should be focused, lean, and within size limits:
 | **Code style in CLAUDE.md** | Style rules that linters handle | Remove, use linter config |
 | **Embedded code blocks** | Large code examples | Use file:line references |
 
-**Size targets:** ~60 lines ideal, 300 max. ~50 instructions ideal, 150 max.
+**Size targets:**
+- **Lean config:** ~60 lines - minimal project-specific overrides
+- **Standard config:** ~150 lines - project commands, key patterns
+- **Comprehensive reference:** 300-500 lines - full tech stack patterns, pitfalls, examples
+
+Choose target based on project complexity. Comprehensive is appropriate for critical infrastructure with specific tech stacks.
 
 **Scoring:**
-- 3: Each file focused, lean, and within size targets
-- 2: Minor verbosity or slightly over targets
-- 1: Bloated, unfocused, or significantly over size targets
-- 0: Major organization issues or way over limits
+- 3: Each file focused and appropriate size for its purpose
+- 2: Minor verbosity or organization issues
+- 1: Bloated, unfocused, or wrong size tier
+- 0: Major organization issues
 
-### Step 6: Check Actionability
+### Step 7: Check Actionability
 
 Instructions should be specific and actionable:
 
@@ -162,24 +174,63 @@ Instructions should be specific and actionable:
 - 1: Many vague instructions
 - 0: Mostly unactionable
 
+### Step 8: Check Content Quality
+
+For projects with specific tech stacks, verify appropriate coverage:
+
+**For Elixir/Phoenix/Ash projects, check for:**
+- [ ] Common pitfalls section (policy blocks, actor timing, etc.)
+- [ ] Idiomatic patterns (pipes, pattern matching, error handling)
+- [ ] Framework-specific patterns (Ash lifecycle, LiveView streams)
+- [ ] HEEx template gotchas (interpolation, class lists, etc.)
+- [ ] Code reuse guidance (helper modules to check first)
+- [ ] MCP tool workflows (Context7 for docs, Tidewave for runtime)
+
+**For any project, check for:**
+- [ ] Quality commands (test, format, lint)
+- [ ] Pre-commit checklist
+- [ ] Expert reference docs (if available)
+
+**Scoring:**
+- 3: Comprehensive coverage for tech stack
+- 2: Missing some patterns/pitfalls
+- 1: Minimal coverage
+- 0: No tech-stack-specific guidance
+
+### Step 9: Check CLAUDE.md / AGENTS.md Consistency
+
+If both files exist, verify:
+- [ ] Same patterns documented (no contradictions)
+- [ ] CLAUDE.md has MCP-specific workflows (Context7, Tidewave)
+- [ ] AGENTS.md omits MCP references (other agents don't have these)
+- [ ] Core patterns present in both
+
+**Scoring:**
+- 3: Consistent, appropriate differences
+- 2: Minor inconsistencies
+- 1: Significant gaps or contradictions
+- 0: Files contradict each other
+
 ---
 
 ## Review Report Template
 
 ```markdown
-## CLAUDE.md Review
+## Agent Instruction Files Review
 
 ### Files Found
 
 | Location | Present | Lines | Instructions |
 |----------|---------|-------|--------------|
 | ~/.claude/CLAUDE.md | Yes/No | N | N |
-| ./.claude/CLAUDE.md | Yes/No | N | N |
+| ./CLAUDE.md | Yes/No | N | N |
+| ./AGENTS.md | Yes/No | N | N |
+| ./CLAUDE.template.md | Yes/No | N | N |
 | ./CLAUDE.local.md | Yes/No | N | N |
 | ./.claude/rules/*.md | N files | N total | N total |
 | **Total** | | **N** | **N** |
 
-Size targets: ~60 lines / ~50 instructions ideal, 300 / 150 max.
+Size targets: Lean config ~60 lines, Comprehensive reference ~300-500 lines.
 
 ### Scores
 
@@ -190,7 +241,9 @@ Size targets: ~60 lines / ~50 instructions ideal, 300 / 150 max.
 | Contradictions | X/3 | |
 | Focus & Size | X/3 | |
 | Actionability | X/3 | |
-| **Total** | **X/15** | |
+| Content Quality | X/3 | |
+| CLAUDE/AGENTS Consistency | X/3 | |
+| **Total** | **X/21** | |
 
 ### Duplications Found
 [List any duplicated instructions, or "None"]
@@ -217,10 +270,10 @@ Size targets: ~60 lines / ~50 instructions ideal, 300 / 150 max.
 
 | Total Score | Verdict | Action |
 |-------------|---------|--------|
-| 13-15 | **Clean** | Minor tweaks at most |
-| 9-12 | **Improve** | Address specific issues |
-| 5-8 | **Reorganize** | Significant restructuring needed |
-| 0-4 | **Rebuild** | Start fresh with clear structure |
+| 18-21 | **Clean** | Minor tweaks at most |
+| 13-17 | **Improve** | Address specific issues |
+| 7-12 | **Reorganize** | Significant restructuring needed |
+| 0-6 | **Rebuild** | Start fresh with clear structure |
 
 ---
 
@@ -356,9 +409,9 @@ See `lib/my_app/accounts/user.ex:1-50` for User resource pattern.
 
 Before completing review:
 
-- [ ] Discovered all CLAUDE.md files in tree
-- [ ] Scored all 5 dimensions
-- [ ] Checked total lines (target ~60, max 300)
+- [ ] Discovered all instruction files (CLAUDE.md, AGENTS.md, template, local, rules/)
+- [ ] Scored all 7 dimensions
+- [ ] Checked total lines (lean ~60, comprehensive ~300-500)
 - [ ] Checked instruction count (target ~50, max 150)
 - [ ] Identified specific duplications
 - [ ] Identified specific contradictions
@@ -366,5 +419,8 @@ Before completing review:
 - [ ] Evaluated focus of each file
 - [ ] Verified no code style rules (use linters)
 - [ ] Verified no large embedded code (use file:line refs)
+- [ ] Checked tech-stack-specific content coverage
+- [ ] Checked CLAUDE.md / AGENTS.md consistency
+- [ ] Verified MCP tools only in CLAUDE.md (not AGENTS.md)
 - [ ] Provided actionable recommendations
 - [ ] Assigned verdict (Clean/Improve/Reorganize/Rebuild)

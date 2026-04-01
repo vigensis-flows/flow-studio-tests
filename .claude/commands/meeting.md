@@ -6,30 +6,33 @@ description: Call an ad-hoc meeting with specific agents
 
 You are convening an ad-hoc meeting with specific agents for this conversation.
 
-## Step 1: Read the Registry
-
-Read `.claude/agents/registry.json` to see available agents.
-
-## Step 2: Parse Meeting Attendees
+## Step 1: Parse Meeting Attendees
 
 The user requested a meeting with: **{{ARGS}}**
 
-Parse this as a comma-separated list of agent keys (e.g., "product-manager, tech-lead, product-designer").
+Parse this as a comma-separated list of agent names (e.g., "product-maestro, tech-smith, design-shaper").
 
-Match each against the registry (by key or name).
+## Step 2: Find Each Agent
+
+For each requested agent, search `.claude/agents/*.md` files:
+1. Match by filename (e.g., "tech-smith" matches `tech-smith.md`)
+2. Match by `name` field in frontmatter
+3. Partial match if no exact match found
 
 **If any agent is not found:**
 - List the invalid agents
-- Show available options from the registry
+- Show available agents by listing files in `.claude/agents/*.md`
 - Ask user to try again with valid agents
 
 ## Step 3: Load All Meeting Attendees
 
-For each requested agent:
-1. Look up their agent file in the registry
-2. Read that agent's full instructions
-3. If the agent has a `required_context` field, read those files too
-4. Store everything in memory for multi-perspective responses
+For each matched agent:
+1. Read the agent's `.md` file
+2. Parse the YAML frontmatter for metadata (name, summary, emoji, domain)
+3. Extract the full persona instructions from the file content
+4. Check if the agent has a `Required Context` section with `@file/path` references
+5. If found, read those required context files
+6. Store everything in memory for multi-perspective responses
 
 **Important:** If any required context file is missing, inform the user that these agents need these files for effective guidance.
 

@@ -1,21 +1,82 @@
 ---
 name: creating-product-vision
-description: Creates product vision documents with proper structure. Use when user asks to "create a product vision", "write a vision document", "draft a vision", or when starting a new product and need to articulate the vision. Also use when refining or improving an existing vision document.
+description: >
+  Creates the product vision document — the north star that guides all product
+  decisions. Articulates where the product is going (3-5 year horizon), why it
+  matters, and what makes it different. Reads the MVP Brief as primary input.
+  Use after the MVP Brief is complete.
+argument-hint: "<product-slug>"
 ---
 
 # Creating Product Vision
 
-Creates well-structured product vision documents that articulate where a product is going and why it matters.
+You are acting as the Product Maestro creating a product vision document.
+The vision answers one question: **"Where are we going?"** — the aspirational
+end state 3-5 years out that guides every product decision.
 
-## What is a Product Vision?
+**Vision is NOT strategy.** Strategy answers "How will we get there?"
+(market approach, go-to-market, business model, roadmap). Keep them separate.
 
-A product vision answers "Where are we going?" - the aspirational end state 3-5 years out.
+**Vision is NOT the MVP Brief.** The MVP Brief defines the first bet.
+The vision defines where that bet leads if it pays off.
 
-**Vision is NOT strategy.** Strategy answers "How will we get there?" (market approach, go-to-market, roadmap). Keep them separate.
+**Vision is NOT a feature list.** Features are outputs. Vision focuses on
+outcomes — what changes in the customer's world.
 
-**Vision is NOT a feature list.** Features are outputs. Vision focuses on outcomes for customers and the market.
+## Inputs
 
----
+| Input | Source | Required |
+|-------|--------|----------|
+| Product slug | `$ARGUMENTS` | Yes |
+| MVP Brief | `docs/product-definition/1-mvp-brief.md` | Yes |
+| Product Brief research | `docs/product-brief/*.md` | For reference |
+| User instruction | Workflow context | No |
+
+The MVP Brief is the primary input. It defines the bet — who, what, why.
+The vision extends that bet into the future: if this works, where does it go?
+
+## Process
+
+### Step 1: Read the MVP Brief
+
+Read `docs/product-definition/1-mvp-brief.md`. Understand:
+- Who the product serves (primary segment + compatibility)
+- What problem it solves
+- What the core insight is
+- What hypotheses are being tested
+- What the expansion path suggests
+
+The MVP Brief's "Expansion Path" section is your starting point for the
+vision — it hints at where the product goes after the first bet.
+
+### Step 2: Extend the Bet Into the Future
+
+The MVP is a starting point. The vision is where 3-5 years of successful
+iteration leads. Ask:
+- If the value hypothesis is confirmed, what does the product become?
+- If the business hypothesis works, how large does this get?
+- What capabilities emerge as the product matures?
+- What changes in the customer's world because this product exists?
+
+The vision should be ambitious but grounded — connected to the MVP by
+a plausible path, not disconnected aspiration.
+
+### Step 3: Establish Product Personality
+
+The vision establishes how the product *feels* — its experiential identity.
+This guides all downstream design and content decisions.
+
+Is this product:
+- **Opinionated** (guides you through a methodology) or **flexible** (adapts to your workflow)?
+- **Professional** (enterprise-grade, precise) or **approachable** (casual, encouraging)?
+- **Expert tool** (assumes competence, offers power) or **guided experience** (teaches as it goes)?
+- **Autonomous** (does the work for you) or **collaborative** (works alongside you)?
+
+State this explicitly — the Design Shaper and Content Writer need it downstream.
+
+### Step 4: Write the Vision Document
+
+Save to `docs/product-definition/2-product-vision.md`.
 
 ## Vision Document Structure
 
@@ -28,115 +89,135 @@ A product vision answers "Where are we going?" - the aspirational end state 3-5 
 | **The Problem** | Pain/opportunity that exists | 1-3 paragraphs |
 | **The Solution** | Core insight and approach | 1-3 paragraphs |
 | **What Makes This Different** | Key differentiators | 3-7 bullets |
+| **Product Personality** | How the product feels | 1 paragraph |
 | **Principles** | Guiding values/beliefs | 3-7 bullets |
 
 ### Optional Sections
 
 | Section | When to Include |
 |---------|-----------------|
-| **Target Customer** | When customer segment is clear |
-| **Working Title Note** | When name may change |
-| **Document History** | When tracking iterations |
+| **Target Customer** | When the MVP Brief targets a specific persona worth highlighting |
+| **Working Title Note** | When the product name may change |
 
 **Target length:** 50-150 lines (1-3 pages)
 
----
+## Output Structure
 
-## Creation Process
+```markdown
+# Product Vision: [Product Name]
 
-### Step 1: Gather Context
+## Vision
 
-Before writing, understand:
-- What sparked this idea? (problem observed, opportunity identified)
-- Who has this problem? (target customer)
-- What exists today? (current alternatives)
-- What's the core insight? (why this approach is different)
-- What's the founder's conviction? (beliefs driving this)
+[1-2 sentence aspirational statement about the future state this product creates.
+Must be: aspirational, specific, timebound (3-5 years), customer-focused.]
 
-If context is unclear, ask clarifying questions before drafting.
+## Mission
 
-### Step 2: Draft Vision Statement
+[1-2 sentence statement about how we pursue the vision.
+The vision is the destination; the mission is the journey.]
 
-The vision statement is the north star. It should be:
-- **Aspirational** - describes a better future state
-- **Specific** - not generic platitudes
-- **Timebound** - achievable in 3-5 years
-- **Customer-focused** - about their world, not your product
+## The Problem
 
-**Good patterns:**
+[1-3 paragraphs structured as:]
+
+**The current state:**
+[What's broken or missing today — grounded in evidence from the research]
+
+**Why it matters:**
+[Impact on real people/businesses — not abstract, specific]
+
+**Why current solutions fail:**
+[The gap in the market — what alternatives miss]
+
+## The Solution
+
+[1-3 paragraphs describing the core insight and approach.
+Outcome-focused: "We enable [outcome] by [approach]"
+NOT feature-focused: "We build a platform with..."]
+
+**Core insight:** [The key realization that makes this different]
+
+## What Makes This Different
+
+[3-7 concrete, defensible differentiators. Each must:]
+[- Be specific (not "better" or "faster")]
+[- Be defensible (why competitors can't easily replicate)]
+[- Create customer value (not just technical novelty)]
+
+1. **[Differentiator 1]:** [Explanation]
+2. **[Differentiator 2]:** [Explanation]
+3. **[Differentiator 3]:** [Explanation]
+
+## Product Personality
+
+[One paragraph describing the experiential identity of the product.
+How does it feel to use? What kind of "colleague" is it? Is it opinionated
+or flexible, professional or approachable, autonomous or collaborative?
+This guides design and content decisions downstream.]
+
+## Principles
+
+[3-7 principles that guide decisions when the vision doesn't provide
+clear answers. Each must be actionable — able to resolve a real trade-off.]
+
+1. **[Principle name]:** [Explanation — what trade-off this resolves]
+2. **[Principle name]:** [Explanation — what trade-off this resolves]
+3. **[Principle name]:** [Explanation — what trade-off this resolves]
+```
+
+## Writing Guidance
+
+### Vision Statement
+
+The vision statement is the north star. Good patterns:
 - "[Customer segment] can [desirable outcome] through [our approach]"
 - "Become the [category] for [segment] by [differentiation]"
 - "[Verb] [outcome] for [customer] through [approach]"
 
-**Examples from reference:**
+**Good examples:**
 - "Build professional services infrastructure that enables radical sustainable scaling through AI-augmented expertise."
 - "Empower every healthcare sales professional with the intelligence they need to outperform."
-- "MedComply becomes the essential developer productivity platform for medical device engineering teams."
 
-### Step 3: Articulate the Problem
+### Differentiation
 
-The problem section creates urgency. Structure as:
+**Good:** "Active Intelligence: Experts create deliverables autonomously, not just provide advice"
+**Bad:** "Better user experience" / "AI-powered" / "More features"
 
-1. **Current state** - What's broken or missing today?
-2. **Why it matters** - Impact on real people/businesses
-3. **Why current solutions fail** - Gap in the market
+### Principles
 
-**Good problem statements:**
-- Specific and concrete (not abstract)
-- Grounded in observation or research
-- Significant enough to warrant a solution
-- Not already solved well by others
+**Good:** "Outcomes over outputs: Measure by client success, not features shipped"
+**Bad:** "Customer-focused" / "High quality" / "Innovative"
 
-### Step 4: Describe the Solution
+## Alignment Check
 
-The solution section explains the core insight. Structure as:
+Before finalizing, verify the vision aligns with the MVP Brief:
 
-1. **Core insight** - The key realization that enables this
-2. **Approach** - How you'll address the problem differently
-3. **What you're building** - High-level description (not features)
+- [ ] The vision extends the MVP's bet into the future — same problem space, same core insight
+- [ ] The primary segment from the MVP Brief is recognizable in the vision's target customer
+- [ ] The differentiators from the vision are consistent with the MVP's scope decisions
+- [ ] The principles don't contradict the MVP Brief's scope boundaries
+- [ ] The expansion path from the MVP Brief is a plausible first step toward the vision
+- [ ] The product personality is consistent with the MVP's experience model
 
-**Keep it outcome-focused:**
-- Bad: "We build an AI-powered platform with..."
-- Good: "We enable [outcome] by [approach]..."
+**If the vision contradicts the MVP Brief**, make your best judgment and
+proceed. Note significant assumptions inline where you made them. The human
+reviews the full definition package and will catch misalignments — the
+iteration mechanism (re-run with feedback) resolves them.
 
-### Step 5: Define Differentiation
+## Iteration Awareness
 
-List 3-7 concrete differentiators. Each should:
-- Be specific (not "better" or "faster")
-- Be defensible (why competitors can't easily copy)
-- Create customer value (not just technical novelty)
+Check if `docs/product-definition/2-product-vision.md` already exists.
 
-**Good differentiation:**
-- "Active Intelligence: Experts create deliverables autonomously, not just provide advice"
-- "B2C entry point: 20 CHF/month for individual reps while competitors sell B2B to enterprises"
+**If it exists** — this is a refinement iteration:
+- Read the existing document first
+- Read the user instruction carefully — it likely contains feedback
+- Refine and improve — don't start from scratch
+- Preserve what works, update what needs to change
+- Add a `## Revision Notes` section at the end noting what changed and why
 
-**Bad differentiation:**
-- "Better user experience"
-- "AI-powered"
-- "More features"
-
-### Step 6: State Principles
-
-Principles guide decisions when the vision doesn't provide clear answers. They should:
-- Be actionable (can resolve real trade-offs)
-- Be memorable (short, punchy)
-- Reflect genuine beliefs (not generic values)
-
-**Good principles:**
-- "Outcomes over outputs: Measure by client success, not features shipped"
-- "Build to learn: Each client project is a learning opportunity"
-- "Product, not services: Every feature request gets evaluated as 'Can we productize this?'"
-
-**Bad principles:**
-- "Customer-focused"
-- "High quality"
-- "Innovative"
-
----
+**If it doesn't exist** — create it fresh from the MVP Brief.
 
 ## Quality Checklist
-
-Before finalizing, verify:
 
 ### Content
 - [ ] Vision is aspirational but achievable (3-5 year horizon)
@@ -144,7 +225,8 @@ Before finalizing, verify:
 - [ ] Solution addresses the problem directly
 - [ ] Differentiation is concrete and defensible
 - [ ] Target customer is identifiable
-- [ ] Principles guide real decisions
+- [ ] Product personality is stated explicitly
+- [ ] Principles guide real decisions (not platitudes)
 
 ### Structure
 - [ ] All required sections present
@@ -155,6 +237,7 @@ Before finalizing, verify:
 ### Alignment
 - [ ] All sections tell the same story
 - [ ] No contradictions between sections
+- [ ] Consistent with MVP Brief
 - [ ] Language is consistent throughout
 
 ### Red Flags (Fix Before Finalizing)
@@ -162,68 +245,25 @@ Before finalizing, verify:
 - [ ] No buzzword soup (AI, disruption, etc. without substance)
 - [ ] No "boil the ocean" scope (trying to solve everything)
 - [ ] No strategy elements (roadmap, metrics, go-to-market)
+- [ ] No contradiction with MVP Brief's bet
 
----
-
-## Template
-
-```markdown
-# Product Vision
-
-**Note:** [Working title note if applicable]
-
-## Vision
-
-[1-2 sentence aspirational statement about the future state]
-
-## Mission
-
-[1-2 sentence statement about how you pursue the vision]
-
-## The Problem
-
-**[Problem category]:**
-- [Specific pain point 1]
-- [Specific pain point 2]
-- [Specific pain point 3]
-
-**Current solutions fail because:**
-- [Gap in existing approach 1]
-- [Gap in existing approach 2]
-
-**The gap:** [One sentence summary of the unmet need]
-
-## The Solution
-
-[1-2 paragraphs describing core insight and approach]
-
-**Core insight:** [The key realization that makes this possible]
-
-## What Makes This Different
-
-1. **[Differentiator 1]:** [Explanation]
-2. **[Differentiator 2]:** [Explanation]
-3. **[Differentiator 3]:** [Explanation]
-[Add more as needed, max 7]
-
-## Principles
-
-1. **[Principle 1]:** [Explanation]
-2. **[Principle 2]:** [Explanation]
-3. **[Principle 3]:** [Explanation]
-[Add more as needed, max 7]
-```
-
----
-
-## Anti-Patterns to Avoid
+## Anti-Patterns
 
 | Anti-Pattern | Description | Fix |
 |--------------|-------------|-----|
 | **Feature Vision** | Lists features instead of outcomes | Rewrite focusing on customer value |
 | **Technology Vision** | Leads with tech stack | Lead with customer problem/outcome |
-| **Boil the Ocean** | Solves everything for everyone | Narrow to specific customer/problem |
+| **Boil the Ocean** | Solves everything for everyone | Narrow to the problem space from the MVP Brief |
 | **Buzzword Bingo** | AI, blockchain, disruption without substance | Replace with specific capabilities |
-| **Me-Too Vision** | "Like X but better" | Articulate unique insight |
-| **Founder Fantasy** | Not grounded in market reality | Add problem evidence |
+| **Me-Too Vision** | "Like X but better" | Articulate the unique insight from the MVP Brief |
+| **Founder Fantasy** | Not grounded in market reality | Ground in evidence from the research |
 | **Strategy Creep** | Includes roadmap, metrics, GTM | Move to strategy document |
+| **MVP Disconnect** | Vision unrelated to the MVP's bet | Re-anchor in the MVP Brief's expansion path |
+
+## What This Document Enables
+
+The vision feeds into:
+- **Strategy** — uses the vision as the destination, defines the path
+- **Design Specification** — uses the product personality to shape the experience
+- **Content Specification** — uses the personality and principles to define voice
+- **Architecture Blueprint** — uses the long-term direction to inform extensibility decisions

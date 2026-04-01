@@ -87,10 +87,10 @@ Each phase uses specialized skills as guidance, with clear handoffs between agen
 
 PHASE 1: INPUT (if files provided)
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ Skill: processing-mvp-input                                                 │
+│ Skill: processing-provided-materials                                        │
 │                                                                             │
 │ INPUT:  input_folder with files                                             │
-│ OUTPUT: docs/products/[name]/input-digest.md                                │
+│ OUTPUT: docs/product-definition/input-digest.md                                │
 │                                                                             │
 │ Process:                                                                    │
 │ - Scan and inventory all files                                              │
@@ -105,8 +105,8 @@ PHASE 2: UNDERSTAND
 │ Owner: Product Trio                                                         │
 │                                                                             │
 │ INPUT:  name, description, Input Digest (if exists)                         │
-│ OUTPUT: docs/products/[name]/mvp-brief.md                                   │
-│         docs/products/[name]/discovery-log.md                               │
+│ OUTPUT: docs/product-definition/1-mvp-brief.md                                   │
+│         docs/product-definition/discovery-log.md                               │
 │                                                                             │
 │ Process:                                                                    │
 │ - Product Trio discovery rounds (adaptive, max N)                           │
@@ -116,7 +116,7 @@ PHASE 2: UNDERSTAND
 │ Research Support (parallel):                                                │
 │ - Skill: deep-research                                                      │
 │ - Agent: Research Analyst                                                   │
-│ - Output: docs/products/[name]/research/*.md                               │
+│ - Output: docs/product-definition/research/*.md                               │
 │                                                                             │
 │ Exit Conditions:                                                            │
 │ - Converged: MVP Brief complete → continue                                  │
@@ -130,8 +130,8 @@ PHASE 3: DEFINE
 │ Owner: Product Trio                                                         │
 │                                                                             │
 │ INPUT:  MVP Brief                                                           │
-│ OUTPUT: docs/products/[name]/vision.md                                      │
-│         docs/products/[name]/strategy.md                                    │
+│ OUTPUT: docs/product-definition/2-product-vision.md                                      │
+│         docs/product-definition/3-product-strategy.md                                    │
 │                                                                             │
 │ Process:                                                                    │
 │ 3.1 Create Vision                                                           │
@@ -153,14 +153,14 @@ PHASE 4: PLAN
 │ Owner: Tech Lead (with Trio input)                                          │
 │                                                                             │
 │ INPUT:  MVP Brief, Vision, Strategy                                         │
-│ OUTPUT: docs/products/[name]/mvp-plan.md                                    │
+│ OUTPUT: docs/product-definition/mvp-plan.md                                    │
 │         docs/increments/[name]-v1.md                                        │
 │                                                                             │
 │ Process:                                                                    │
 │ 4.1 MVP Plan                                                                │
 │     - Apply creating-mvp-plans skill                                        │
 │     - Define phases with Build Plans                                        │
-│     - Apply "can we launch without?" scope test                            │
+│     - Apply "MVP Scope Test (Minimum AND Viable AND Product)" scope test                            │
 │                                                                             │
 │ 4.2 v0.1.0 Increment                                                        │
 │     - Apply creating-increments skill                                       │
@@ -216,12 +216,12 @@ PHASE 6: DELIVER
 │ ├── Working application (runnable/deployable)                               │
 │ ├── Demo instructions (README or DEMO.md)                                   │
 │ └── Evidence trail:                                                         │
-│     docs/products/[name]/                                                   │
+│     docs/product-definition/                                                │
 │     ├── input-digest.md          (if input files provided)                 │
-│     ├── mvp-brief.md             (MVP scope definition)                     │
+│     ├── 1-mvp-brief.md           (MVP scope definition)                    │
 │     ├── discovery-log.md         (discovery process)                        │
-│     ├── vision.md                (product vision)                           │
-│     ├── strategy.md              (product strategy)                         │
+│     ├── 2-product-vision.md      (product vision)                           │
+│     ├── 3-product-strategy.md    (product strategy)                         │
 │     ├── mvp-plan.md              (implementation plan)                      │
 │     └── research/                (research reports)                         │
 │         ├── market-research.md                                              │
@@ -270,13 +270,13 @@ If product context is incomplete, the command will guide you through setup.
 **When**: Input folder provided
 
 **Process**:
-1. Invoke `processing-mvp-input` skill
-2. Create `docs/products/[name]/` folder structure
+1. Invoke `processing-provided-materials` skill
+2. Create `docs/product-definition/` folder structure
 3. Process all files, create Input Digest
 4. Verify digest is comprehensive
 
 **Outputs**:
-- `docs/products/[name]/input-digest.md`
+- `docs/product-definition/input-digest.md`
 
 ### Phase 2: Understanding
 
@@ -302,9 +302,9 @@ If product context is incomplete, the command will guide you through setup.
 - STOP workflow, return to human
 
 **Outputs**:
-- `docs/products/[name]/mvp-brief.md`
-- `docs/products/[name]/discovery-log.md`
-- `docs/products/[name]/research/*.md` (if research conducted)
+- `docs/product-definition/1-mvp-brief.md`
+- `docs/product-definition/discovery-log.md`
+- `docs/product-definition/research/*.md` (if research conducted)
 
 ### Phase 3: Definition
 
@@ -324,8 +324,8 @@ If product context is incomplete, the command will guide you through setup.
 - Iterate if needed (no human gate)
 
 **Outputs**:
-- `docs/products/[name]/vision.md`
-- `docs/products/[name]/strategy.md`
+- `docs/product-definition/2-product-vision.md`
+- `docs/product-definition/3-product-strategy.md`
 
 ### Phase 4: Planning
 
@@ -333,7 +333,7 @@ If product context is incomplete, the command will guide you through setup.
 1. Create MVP Plan:
    - Invoke `creating-mvp-plans` skill
    - Define phases (Foundation → Core → Integration → Quality → Deploy)
-   - Apply scope discipline ("can we launch without?")
+   - Apply scope discipline ("MVP Scope Test (Minimum AND Viable AND Product)")
 2. Create v0.1.0 Increment:
    - Invoke `creating-increments` skill
    - Create full PDAI increment document
@@ -344,7 +344,7 @@ If product context is incomplete, the command will guide you through setup.
    - Invoke `refining-increments` if changes needed
 
 **Outputs**:
-- `docs/products/[name]/mvp-plan.md`
+- `docs/product-definition/mvp-plan.md`
 - `docs/increments/[name]-v1.md`
 
 ### Phase 5: Build
@@ -402,14 +402,12 @@ If product context is incomplete, the command will guide you through setup.
 ## Folder Structure
 
 ```
-docs/product/
-├── mvp-brief.md              # MVP scope definition
+docs/product-definition/
+├── 1-mvp-brief.md            # MVP scope definition
 ├── discovery-log.md          # Discovery process record
-├── vision.md                 # Product vision
-├── strategy.md               # Product strategy
-└── mvp-plan.md               # Implementation plan
-
-docs/discovery/
+├── 2-product-vision.md       # Product vision
+├── 3-product-strategy.md     # Product strategy
+├── mvp-plan.md               # Implementation plan
 ├── input-digest.md           # Processed input (if provided)
 └── research/                 # Research artifacts (if any)
 
@@ -454,7 +452,7 @@ The creating-mvp workflow succeeds when:
 - [ ] MVP Plan with phases and Build Plans
 - [ ] Increment executed with all quality gates passed
 - [ ] Working demo ready for human review
-- [ ] Complete evidence trail in docs/products/[name]/
+- [ ] Complete evidence trail in docs/product-definition/
 - [ ] Human can quickly approve next increment
 
 ---
@@ -500,7 +498,7 @@ When escalating to human:
 |--------------|---------|-----|
 | **Skipping understanding** | Building wrong thing | Complete discovery rounds |
 | **Premature planning** | Plan before scope clear | Converge on scope first |
-| **Over-engineering v0.1.0** | Scope creep | Apply "can we launch without?" |
+| **Over-engineering v0.1.0** | Scope creep | Apply "MVP Scope Test (Minimum AND Viable AND Product)" |
 | **Skipping reviews** | Quality issues | Always run internal reviews |
 | **Silent failures** | Issues hidden | Document all failures and decisions |
 | **Infinite research** | Never converging | Time-box, accept uncertainty |

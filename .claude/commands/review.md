@@ -716,7 +716,7 @@ Instead:
 ## Example Output Preview
 
 ```markdown
-# Agent Self-Review: Engineering Catalyst
+# Agent Self-Review: Tech Smith
 
 **Overall Assessment:** Good (with room for improvement)
 

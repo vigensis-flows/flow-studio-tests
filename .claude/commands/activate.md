@@ -6,29 +6,36 @@ description: Activate a single agent (stays active until changed)
 
 You are now activating an agent that will remain active for the rest of this conversation.
 
-## Step 1: Read the Registry
-
-Read `.claude/agents/registry.json` to see available agents.
-
-## Step 2: Identify Requested Agent
+## Step 1: Find the Agent
 
 The user requested to activate: **{{ARGS}}**
 
-Match this against the registry (by key or name).
+Search `.claude/agents/*.md` files for a matching agent:
+1. Match by filename (e.g., "tech-smith" matches `tech-smith.md`)
+2. Match by `name` field in frontmatter
+3. Partial match if no exact match found
 
-## Step 3: Load the Agent
+## Step 2: Load the Agent
 
-Read the agent file from the registry entry.
+Read the matching agent file. Parse the YAML frontmatter to get:
+- `name` - agent identifier
+- `summary` - brief description
+- `description` - full description (when to use)
+- `emoji` - display emoji
+- `domain` - knowledge domain
 
-## Step 4: Load Required Context (if specified)
+The rest of the file after the frontmatter is the agent's persona instructions.
 
-Check if the agent has a `required_context` field in the registry. If it does, read each file listed.
+## Step 3: Load Required Context (if specified)
+
+Check if the agent has a `Required Context` section with `@file/path` references.
+If found, read each referenced file.
 
 **Important:** If a required context file is missing, inform the user that the agent needs this file for effective guidance.
 
 Track which required files were loaded successfully.
 
-## Step 5: Load Optional Context (if available)
+## Step 4: Load Optional Context (if available)
 
 Try to load optional context files from `.claude/context/`. These are user-specific and make you more effective when present, but you work fine without them.
 
@@ -42,20 +49,20 @@ Try to load optional context files from `.claude/context/`. These are user-speci
 
 **Important:** Do NOT show errors if files are missing. This is expected and normal.
 
-## Step 6: Display Activation
+## Step 5: Display Activation
 
 Show a confirmation like:
 ```
 ✅ Activated: [emoji] Agent Name
 
-📋 Description: [description]
+📋 Summary: [summary]
 📁 Domain: [domain]
 
 [If required context was loaded:]
-📚 Required context: [list files, e.g., "product-development-strategy"]
+📚 Required context: [list files]
 
 [If optional context was loaded:]
-📝 Optional context: [list files, e.g., "organization-context, product-context"]
+📝 Optional context: [list files]
 
 [If no optional context loaded:]
 💡 Running with generic guidance (no optional context files found)
@@ -67,7 +74,7 @@ This agent is now active for this conversation and will guide all responses unti
 Type /status to check current agent.
 ```
 
-## Step 7: Adopt the Persona with Context
+## Step 6: Adopt the Persona with Context
 
 **IMPORTANT**: For all subsequent messages in this conversation:
 

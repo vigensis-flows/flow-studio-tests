@@ -1,0 +1,61 @@
+name: audit-licenses
+description: >
+  License expert audits the architecture for dependency license compatibility,
+  copyleft risks, and open-source compliance. Produces a license audit with
+  risk findings and compliance recommendations.
+version: "1.0.0"
+
+input:
+  product_name:
+    type: string
+    required: true
+    description: Human-readable name of the product
+  instruction:
+    type: string
+    required: false
+    description: Optional guidance for the review
+
+steps:
+  - name: license-audit
+    type: ask_ai
+    description: Conduct license audit of the architecture dependencies
+    config:
+      agent: license-governor
+      prompt: |
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        ## Task
+
+        Conduct a license audit of this product's architecture and dependencies.
+
+        Read this document:
+        - docs/product-definition/7-architecture-blueprint.md
+
+        Assess:
+        - Dependency license compatibility
+        - Copyleft risk assessment
+        - Open-source compliance
+        - Distribution implications
+        - SBOM considerations
+
+        For each finding, provide:
+        - Risk rating (Critical / High / Medium / Low)
+        - Description of the risk
+        - Recommendation to address it
+
+        ## Iteration Awareness
+
+        Check if docs/concept-validation/license-audit.md already exists.
+        If it does, read it first and refine based on the user instruction.
+        Preserve what's still valid, update what needs to change.
+        Note revisions in a "## Revision Notes" section at the end.
+
+        ## Output
+
+        Save to: docs/concept-validation/license-audit.md
+    output:
+      path: context.review
+    postconditions:
+      - type: file_exists
+        path: "docs/concept-validation/license-audit.md"

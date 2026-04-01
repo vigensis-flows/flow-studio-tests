@@ -23,12 +23,11 @@ Score each dimension 0-3:
 
 | Dimension | 0 (Poor) | 1 (Weak) | 2 (Adequate) | 3 (Strong) |
 |-----------|----------|----------|--------------|------------|
-| **Scope minimalism** | Feature-stuffed | Some extras | Mostly minimal | True MVP |
+| **MVP Scope Test applied** | No scope discipline | Some dimensions evaluated | Most features tested | All three dimensions evaluated for every feature |
 | **Scope justification** | No rationale | Vague reasons | Some justification | Clear "why essential" |
 | **Cut list clarity** | No out-of-scope | Vague deferrals | Listed deferrals | Prioritized with rationale |
 
-**Scope test for each feature**: "Can we launch without this?"
-- If yes and included → flag as scope creep
+**MVP Scope Test for each feature**: Evaluate against three dimensions — Minimum (tests hypothesis or legal/trust?), Viable (customer expects in real product?), Product (core job requires it?). All three must pass. Failure on any dimension → flag as scope creep.
 
 ### Step 3: Evaluate Prompt Quality
 
@@ -83,7 +82,7 @@ Check dependency ordering:
 
 | Anti-Pattern | How to Detect | Severity |
 |--------------|---------------|----------|
-| **Scope creep** | Features that fail "can we launch without?" | High |
+| **Scope creep** | Features that fail any MVP Scope Test dimension | High |
 | **Giant prompts** | Single prompt for multi-day work | High |
 | **Missing acceptance** | Prompts end without success criteria | High |
 | **CLAUDE.md duplication** | Quality rules repeated in prompts | Medium |
@@ -190,7 +189,7 @@ Based on findings, provide:
 
 **Symptom:** Features included that aren't essential for launch.
 
-**Test:** For each feature, ask "Can we launch without this and still deliver core value?"
+**Test:** Apply the MVP Scope Test to each feature — does it pass all three dimensions (Minimum, Viable, Product)?
 
 **Fix:** Move non-essential features to "Out of Scope (Post-MVP)" with brief rationale.
 

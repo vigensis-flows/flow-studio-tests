@@ -1,0 +1,240 @@
+name: innovation-scout
+description: >
+  Discover, analyze, and report on emerging technology trends.
+  Produces a research folder with individual trend analyses,
+  a synthesis report, and optionally a PDF.
+version: "1.0.0"
+
+input:
+  topic:
+    type: string
+    required: true
+    description: "Technology area to research"
+  create_pdf:
+    type: boolean
+    default: false
+    description: Generate a PDF version of the final report
+
+display:
+  label: "{{input.topic}}"
+  sections:
+    - header: "Strategic Recommendation"
+      content: output.summary
+    # NOTE: "Trends Discovered" removed — analyze-trends stores to context.analyses
+    # which isn't propagated to output. Re-add when Part 1 fixes output mapping.
+    - header: "Deliverables"
+      type: files
+      items:
+        - label: "Research Report"
+          path: output.files.report_path
+        - label: "Executive Summary"
+          path: output.files.summary_path
+        - label: "PDF Report"
+          path: output.files.pdf_path
+
+steps:
+  # ── Act 1: Setup ──────────────────────────────────────────────────────────
+
+  - name: create-slug
+    type: run_script
+    config:
+      module: FlowStudio.Workflows.Scripts.InnovationScout
+      function: create_slug
+    output:
+      path: context.workspace
+
+  - name: create-folder
+    type: run_command
+    config:
+      command: mkdir
+      args: ["-p", "{{context.workspace.folder_path}}"]
+
+  # ── Act 2: Discovery ─────────────────────────────────────────────────────
+
+  - name: scout-trends
+    type: ask-ai
+    description: Search for the top 3 emerging trends
+    config:
+      agent: research-analyst
+      prompt: |
+        Research emerging trends in: "{{input.topic}}"
+
+        Use web search to find what's happening RIGHT NOW (2026) in this space.
+        Focus on trends that are actively emerging — not established or speculative.
+
+        Identify exactly 3 trends. For each, capture:
+        - name: a concise trend name (3-5 words)
+        - summary: 1-2 sentence description of what's happening
+        - signal: what concrete evidence exists (funding, adoption, announcements)
+        - sources: 2-3 URLs you found
+
+        IMPORTANT: Be concise. This is a scout, not a deep dive. Spend no more
+        than 2-3 minutes total on research.
+
+        Return as JSON: { trends: [{ name, summary, signal, sources }] }
+    output:
+      path: context.trends
+      format: json
+      required:
+        - trends
+
+  - name: analyze-trends
+    type: for-each
+    description: Deep-dive analysis of each trend
+    config:
+      over: context.trends
+      as: trend
+      parallel: true
+      max_concurrent: 3
+      do:
+        type: ask-ai
+        config:
+          agent: research-analyst
+          prompt: |
+            Analyze this emerging trend in "{{input.topic}}":
+
+            Trend: {{trend.name}}
+            Initial finding: {{trend.summary}}
+            Signal: {{trend.signal}}
+            Initial sources: {{trend.sources}}
+
+            Do a focused web search to verify and expand on these findings.
+            Look for the LATEST information (2026).
+
+            Then write a concise analysis (300-400 words max) as a markdown file.
+            Save it to: {{context.workspace.folder_path}}/{{trend.name | slug}}-trend-analysis.md
+
+            Use this structure:
+            ```markdown
+            # [Trend Name]
+
+            ## What's Happening
+            [2-3 paragraphs on the trend, what's driving it, who's involved]
+
+            ## Why It Matters
+            [1-2 paragraphs on implications and opportunities]
+
+            ## Key Players
+            [Bullet list of companies, projects, or people driving this]
+
+            ## Sources
+            [Numbered list of URLs with brief descriptions]
+            ```
+
+            IMPORTANT: Be concise and specific. Cite sources. No filler.
+            Spend no more than 2-3 minutes on additional research.
+
+            Return as JSON: { trend_name, file_path, key_insight }
+        output:
+          format: json
+          type: object
+    output:
+      path: context.analyses
+      type: array
+
+  # ── Act 3: Evaluate & Synthesize ──────────────────────────────────────────
+
+  - name: assess-relevance
+    type: decide
+    description: Determine which trend is most strategically relevant to act on
+    config:
+      prompt: |
+        You've analyzed 3 emerging trends in "{{input.topic}}":
+
+        {{context.analyses}}
+
+        Read the trend analysis files in {{context.workspace.folder_path}}/
+        to review the full details.
+
+        Which trend is most strategically relevant for a technology-forward
+        organization to act on in the next 6-12 months?
+      options:
+        - name: "{{context.trends.0.name}}"
+          description: "{{context.trends.0.summary}}"
+          action: next
+        - name: "{{context.trends.1.name}}"
+          description: "{{context.trends.1.summary}}"
+          action: next
+        - name: "{{context.trends.2.name}}"
+          description: "{{context.trends.2.summary}}"
+          action: next
+      criteria:
+        - Strongest real-world evidence and adoption signals
+        - Actionable within 6-12 months
+        - Highest potential impact if acted upon early
+    output:
+      path: context.recommendation
+
+  - name: synthesize
+    type: ask-ai
+    description: Write the research report
+    config:
+      agent: research-analyst
+      prompt: |
+        You've analyzed 3 emerging trends in "{{input.topic}}" and determined
+        that the most strategically relevant trend is: {{context.recommendation.decision}}
+        Reasoning: {{context.recommendation.reasoning}}
+
+        Read the trend analysis files in {{context.workspace.folder_path}}/
+        to refresh your understanding of all three trends.
+
+        Now write the full report content as markdown. Lead with the recommended
+        trend — this report has a point of view, not just a summary.
+
+        Structure:
+        ```markdown
+        # Innovation Scout: {{input.topic}}
+
+        ## Strategic Recommendation
+
+        [Which trend to watch/act on, why it matters most, and what to do about it
+        in the next 6-12 months. 1-2 paragraphs. This is the most important section.]
+
+        ## Trends Discovered
+
+        ### 1. [Recommended Trend Name]
+        [Summary from the analysis — 1 paragraph. This one goes first.]
+
+        ### 2. [Second Trend Name]
+        [Summary from the analysis — 1 paragraph]
+
+        ### 3. [Third Trend Name]
+        [Summary from the analysis — 1 paragraph]
+
+        ## How These Trends Connect
+        [How the three trends relate to each other. Are they converging?
+        What's the combined signal about where this space is heading? 1-2 paragraphs.]
+
+        ## Sources
+        [Consolidated numbered list of all URLs from all trend analyses]
+        ```
+
+        IMPORTANT:
+        - Keep it tight: 600-800 words total.
+        - No filler, no disclaimers, no hedging. Write with conviction.
+        - Do NOT save this to a file. Return the content as a string.
+
+        Return as JSON: { content: "the full markdown content" }
+    output:
+      path: context.report_content
+      format: json
+      required:
+        - content
+
+  # ── Act 4: Deliverable ───────────────────────────────────────────────────
+
+  - name: create-report
+    type: run_workflow
+    description: Package and deliver the final report
+    config:
+      workflow: create-report
+      input:
+        title: "Innovation Scout: {{input.topic}}"
+        subtitle: "Emerging Trends Report"
+        content: "{{context.report_content}}"
+        folder_path: "{{context.workspace.folder_path}}"
+        report_filename: "innovation-scout-report"
+        create_pdf: "{{input.create_pdf}}"
+      inherit_context: false
+    output:
+      path: context.deliverable

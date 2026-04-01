@@ -4,28 +4,50 @@ description: List all available agents and teams
 
 # Available Agents & Teams
 
-Read `.claude/agents/registry.json` and display beautifully:
+List available agents and teams by reading agent files and team definitions.
+
+## Step 1: List Agents
+
+Read all `.claude/agents/*.md` files and parse their YAML frontmatter to extract:
+- `name` - agent identifier (e.g., "tech-smith")
+- `summary` - brief description
+- `emoji` - display emoji
+- `domain` - knowledge domain
+
+**Display format:**
 
 ## 👤 Available Agents
 
 ```
-[emoji] agent-key
-    Name: Full Agent Name
+[emoji] agent-name
+    Summary: brief description
     Domain: domain-name
-    Description: description
-    Activate: /activate agent-key
+    Activate: /activate agent-name
 
 [Repeat for all agents]
 ```
 
+## Step 2: List Teams
+
+Read all `.claude/teams/*.json` files to get team definitions.
+
+Each team file contains:
+- `name` - display name
+- `slug` - team identifier
+- `members` - array of agent names
+- `description` - team purpose
+- `emoji` - display emoji
+
+**Display format:**
+
 ## 👥 Available Teams
 
 ```
-[emoji] team-key
+[emoji] team-slug
     Name: Team Name
-    Members: Agent 1, Agent 2, Agent 3
+    Members: agent-1, agent-2, agent-3
     Purpose: team description
-    Activate: /team team-key
+    Activate: /team team-slug
 
 [Repeat for all teams]
 ```
@@ -34,7 +56,7 @@ Read `.claude/agents/registry.json` and display beautifully:
 
 **Single Agent Mode**:
 ```
-/activate engineering-lead
+/activate tech-smith
 ```
 → All responses come from that agent's perspective
 

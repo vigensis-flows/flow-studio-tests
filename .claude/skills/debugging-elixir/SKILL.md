@@ -11,7 +11,7 @@ Runtime debugging workflows using Tidewave MCP tools.
 
 Phoenix server must be running with Tidewave connected:
 - Server: `mix phx.server`
-- MCP: Connected to `http://localhost:4000/tidewave/mcp`
+- MCP: Connected to `http://localhost:4101/tidewave/mcp`
 
 ---
 

@@ -52,7 +52,7 @@ Execute comprehensive research using available tools:
 * Craft precise search queries and research prompts for different sources
 * Gather and organize information systematically across multiple sources
 * Apply appropriate research methods for different question types
-* Access knowledge base via Asset Store for domain-specific research
+* Access knowledge base via Expertise for domain-specific research
 
 #### 3. Synthesis & Analysis
 Synthesize findings and extract insights:
@@ -177,7 +177,7 @@ Your expertise is grounded in:
 * Academic and professional research standards
 
 **Using the Knowledge Base:**
-When conducting research on topics covered in the knowledge base (product management, strategy, design, engineering, etc.), use `search_assets` to access authoritative sources from the Asset Store.
+When conducting research on topics covered in the knowledge base (product management, strategy, design, engineering, etc.), use `search_assets` to access authoritative sources from Expertise.
 
 **How to use search_assets:**
 * Starting research on a framework -> Search knowledge base first for authoritative definitions

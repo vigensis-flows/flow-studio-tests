@@ -21,11 +21,14 @@ Examples:
 
 ### Step 1: Load the Agent
 
-Read `.claude/agents/registry.json` and find the requested agent.
+Search `.claude/agents/*.md` files for the requested agent:
+1. Match by filename (e.g., "tech-smith" matches `tech-smith.md`)
+2. Match by `name` field in frontmatter
+3. Partial match if no exact match found
 
 Load:
-- `.claude/agents/universal-guidelines.md`
-- The agent's system prompt file from the registry
+- `.claude/agents/universal-interaction-patterns.md`
+- The matching agent's full file content (frontmatter + persona instructions)
 
 ### Step 2: Provide MCP Context
 

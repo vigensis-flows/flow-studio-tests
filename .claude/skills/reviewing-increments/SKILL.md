@@ -43,7 +43,7 @@ Score each dimension (0-3):
 | **Success criteria** | Missing | Vague/unmeasurable | Mostly measurable | All quantified |
 | **Build Plan** | Missing/vague | Steps too big | Clear steps | Right-sized with prompts |
 | **Key decisions** | No decisions | Decisions without rationale | Clear reasoning | Data-driven choices |
-| **Risk coverage** | No risks | Incomplete | Major risks covered | Comprehensive + mitigations |
+| **Risk coverage** | No risks | Incomplete | Major risks covered | Relevant risks + simple mitigations |
 | **Scope boundaries** | No exclusions | Vague boundaries | Clear exclusions | Explicit with rationale |
 
 **Total score interpretation:**
@@ -71,6 +71,42 @@ Score each dimension (0-3):
 
 **Test 6: The "Scope Creep" Test**
 > Are scope boundaries explicit?
+
+### What NOT to Flag as Gaps
+
+Some concerns are handled by the **execution process** (building-increments skill), not the plan itself. Do not flag these as gaps:
+
+| Concern | Why It's Not a Gap |
+|---------|-------------------|
+| "Update existing tests" | Verification steps run `mix test`. If tests break, executor fixes them to pass verification. |
+| "Fix broken imports" | Compilation checks (`mix compile --warnings-as-errors`) catch these during execution. |
+| "Handle edge cases" | Covered by acceptance criteria and verification; executor addresses as needed. |
+| "Add error handling" | Part of making code work; executor handles during implementation. |
+
+**The principle**: If the Build Plan includes verification commands (tests, compilation, type checks), assume the executor will fix whatever those commands catch. Don't require the plan to explicitly state "fix anything that breaks."
+
+**Do flag as gaps**:
+- Missing verification commands entirely
+- No test strategy for new functionality
+- Critical risks without mitigation
+- Vague acceptance criteria that can't be verified
+- **Over-engineered risk mitigations** (see below)
+
+### Over-Engineering Red Flags
+
+Flag these as problems requiring revision:
+
+| Red Flag | What It Looks Like | Why It's a Problem |
+|----------|-------------------|-------------------|
+| **Parallel running** | "Run old and new systems side by side" | Increment should replace, not coexist |
+| **Rollback scripts** | "Create scripts to revert changes" | If you need rollback, scope is unclear - clarify what you're changing |
+| **Feature flags** | "Toggle between old and new implementation" | Same as parallel running - just replace |
+| **Gradual migration** | "Migrate users in batches over time" | This is a project, not an increment |
+| **Backward compatibility layers** | "Keep old API working alongside new" | Delete old code when new works |
+
+**Note on duration**: Don't flag duration as a problem. Increments are scope-based, not time-based. A well-scoped increment might take hours or days depending on complexity discovered during execution. Never suggest splitting based on time estimates.
+
+**When you see these red flags**: Request clarification on scope. Each increment should make an atomic change where old code is deleted when new code works.
 
 ### Plan Review Output
 
@@ -335,6 +371,7 @@ From Delivery Review:
 | Steps too big | Request split into 1-2 hour chunks |
 | Missing risks | Identify likely risks from experience |
 | No scope exclusions | Request explicit boundaries |
+| "Update tests" not mentioned | **Not a gap** - handled by execution process (see "What NOT to Flag") |
 
 ### Delivery Review Issues
 

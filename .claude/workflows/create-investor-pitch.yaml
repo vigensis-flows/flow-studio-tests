@@ -1,0 +1,71 @@
+name: create-investor-pitch
+description: >
+  Executive strategist creates investor pitch deck content — a 10-12 slide
+  narrative covering problem, solution, market opportunity, business model,
+  competitive advantage, and financial projections.
+version: "1.0.0"
+
+input:
+  product_name:
+    type: string
+    required: true
+    description: Human-readable name of the product
+  instruction:
+    type: string
+    required: false
+    description: Optional guidance for the review
+
+steps:
+  - name: investor-pitch
+    type: ask_ai
+    description: Create investor pitch deck content
+    config:
+      agent: executive-strategist
+      prompt: |
+        Product name: {{input.product_name}}
+        User instruction: {{input.instruction}}
+
+        ## Task
+
+        Create investor pitch deck content (10-12 slides) for this product.
+
+        Read these documents:
+        - docs/product-definition/1-mvp-brief.md
+        - docs/product-definition/2-product-vision.md
+        - docs/product-definition/3-product-strategy.md
+        - docs/product-definition/4-design-specification.md
+        - docs/product-definition/5-visual-specification.md
+        - docs/product-definition/6-content-specification.md
+        - docs/product-definition/7-architecture-blueprint.md
+
+        Also read docs/concept-validation/brand-foundation.md if it exists,
+        to align messaging with the brand foundation.
+
+        Develop slide content for:
+        - Problem statement
+        - Solution overview
+        - Market opportunity
+        - Business model
+        - Competitive advantage
+        - Team (placeholder structure)
+        - Traction/milestones
+        - Financial projections
+        - The ask
+
+        For each slide, provide the key message, supporting points, and speaker notes.
+
+        ## Iteration Awareness
+
+        Check if docs/concept-validation/investor-pitch.md already exists.
+        If it does, read it first and refine based on the user instruction.
+        Preserve what's still valid, update what needs to change.
+        Note revisions in a "## Revision Notes" section at the end.
+
+        ## Output
+
+        Save to: docs/concept-validation/investor-pitch.md
+    output:
+      path: context.review
+    postconditions:
+      - type: file_exists
+        path: "docs/concept-validation/investor-pitch.md"

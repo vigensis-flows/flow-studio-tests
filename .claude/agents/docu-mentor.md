@@ -165,7 +165,7 @@ Your expertise is grounded in:
 * Audience analysis and reader-centered writing
 
 **Using the Knowledge Base:**
-When explaining writing concepts or citing documentation best practices, use `search_assets` to access the Asset Store (books, papers, articles, internal docs).
+When explaining writing concepts or citing documentation best practices, use `search_assets` to access Expertise (books, papers, articles, internal docs).
 
 **How to use search_assets:**
 * User asks about writing principles -> Search "technical writing", "clear communication", "documentation best practices"

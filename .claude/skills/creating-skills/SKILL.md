@@ -1,27 +1,40 @@
 ---
 name: creating-skills
-description: Creates Claude Code skills (SKILL.md files). Use when creating, writing, or adding skills. Triggers: "create skill", "new skill", "add skill", "SKILL.md", "how do I make a skill", "extend Claude's capabilities".
+description: Creates agent skills (SKILL.md files) following the Agent Skills open standard. Use when creating, writing, or adding skills. Triggers: "create skill", "new skill", "add skill", "SKILL.md", "how do I make a skill", "extend Claude's capabilities".
 ---
 
 # Creating Skills
 
-Creates and evolves production-ready Claude Code Skills with proper YAML frontmatter, progressive disclosure, and validation.
+Creates production-ready skills following the Agent Skills open standard (agentskills.io). Skills are portable across Claude Code, OpenAI Codex, Gemini CLI, Cursor, VS Code Copilot, and 27+ other adopters.
 
 ## What Skills Are
 
-Skills are modular packages that extend Claude's capabilities with:
-- Specialized workflows for specific domains
-- Tool integrations (file formats, APIs)
-- Domain expertise (schemas, business logic)
-- Bundled resources (scripts, templates, references)
+Skills are **packaged procedural knowledge** — they teach agents HOW to complete specific tasks.
+
+| Concept | What It Is | Standard |
+|---------|-----------|----------|
+| **Skills** | Procedural knowledge + workflows | Agent Skills (agentskills.io) |
+| **Tools** | Atomic executable functions | Function calling / MCP |
+| **MCP Servers** | Infrastructure providing tool bundles | MCP (modelcontextprotocol.io) |
+| **Agent Prompts** | Identity, perspective, communication style | — |
+
+Skills and agent prompts are complementary:
+
+| In a Skill | In an Agent Prompt |
+|------------|-------------------|
+| Step-by-step procedures | Identity and perspective |
+| Domain-specific knowledge | Communication style |
+| Templates and output formats | Decision-making heuristics |
+| Executable scripts | Behavioral constraints |
+| Conditional workflows | Interaction patterns |
 
 ---
 
-## Writing for Claude (Not Humans)
+## Writing for Models, Not Humans
 
-**Critical:** Skills are consumed by Claude, not read by humans. This fundamentally changes how to write them.
+Skills are consumed by language models, not read by humans.
 
-**Write as instructions Claude follows:**
+**Write as instructions:**
 - Imperative form: "Run X", "Check Y", "Use Z"
 - Specific commands with exact syntax
 - Schemas and examples over explanations
@@ -29,17 +42,10 @@ Skills are modular packages that extend Claude's capabilities with:
 
 **Avoid documentation style:**
 - Explanatory prose ("This is useful because...")
-- Concepts Claude already knows (JSON syntax, REST APIs, common patterns)
-- Context-setting paragraphs that add no actionable information
-- Human-oriented phrasing ("You might want to...", "Consider...")
+- Concepts the model already knows (JSON, REST, common patterns)
+- Context-setting paragraphs with no actionable information
 
-**Litmus test:** Would removing this text hurt Claude's task performance? If not, remove it.
-
-**Common mistakes:**
-- Explaining what a library does (Claude knows)
-- Describing file formats Claude already understands
-- Adding "helpful context" that's actually noise
-- Writing in a friendly, explanatory tone meant for human readers
+**Litmus test:** Would removing this text hurt task performance? If not, remove it.
 
 ---
 
@@ -52,36 +58,64 @@ skill-name/
 │   └── detailed-guide.md
 ├── scripts/              # Optional: Executable utilities
 │   └── helper.py
-└── assets/               # Optional: Templates, images
+└── assets/               # Optional: Templates, images, data files
     └── template.txt
 ```
 
 **Locations:**
 - Personal: `~/.claude/skills/skill-name/`
 - Project: `.claude/skills/skill-name/` (version controlled)
+- Enterprise: Managed settings (all org users)
 
 ---
 
-## YAML Frontmatter (Required)
+## YAML Frontmatter
 
-Only two fields matter:
+### Open Standard Fields
 
 ```yaml
 ---
-name: skill-name
-description: Brief what + when to use. Third person. Max 1024 chars.
+name: skill-name          # Required. Max 64 chars, lowercase + hyphens
+description: >            # Required. Max 1024 chars
+  What it does and when to use it.
+  Third person. Include trigger phrases.
+license: MIT              # Optional
+compatibility: requires python 3.10+  # Optional. Max 500 chars
+metadata:                 # Optional. Arbitrary key-value
+  category: engineering
+allowed-tools: Read Write Bash  # Optional. Experimental in spec
 ---
 ```
 
+### Claude Code Extensions
+
+Beyond the open standard, Claude Code supports:
+
+| Field | Description |
+|-------|-------------|
+| `disable-model-invocation` | `true` prevents Claude from auto-loading |
+| `user-invocable` | `false` hides from `/` menu (background knowledge) |
+| `context` | `fork` runs in isolated subagent |
+| `agent` | Subagent type when `context: fork` (e.g., `Explore`, `Plan`, custom) |
+| `model` | Model override when skill is active |
+| `hooks` | Lifecycle hooks scoped to this skill |
+| `argument-hint` | Autocomplete hint, e.g., `[issue-number]` |
+
+These extensions are NOT portable to other platforms.
+
 ### Name Field
-- Max 64 characters
-- Lowercase letters, numbers, hyphens
-- Gerund form preferred: "processing-pdfs" not "pdf-processor"
+
+- Max 64 characters, lowercase letters/numbers/hyphens
+- Must match directory name
+- Gerund form preferred: `processing-pdfs` not `pdf-processor`
+- Avoid vague names: `helper`, `utils`, `tools`
 
 ### Description Field
-- **Critical for discovery** - Claude uses this to match skills to tasks
-- Must include WHAT it does and WHEN to use it
-- Third person ("Processes PDFs..." not "I help with...")
+
+**Critical for discovery.** The model reads all descriptions at startup to match skills to tasks.
+
+- Write in third person ("Processes PDFs..." not "I help with...")
+- Include WHAT it does AND WHEN to use it
 - Include trigger phrases users would say
 
 **Good:**
@@ -91,8 +125,42 @@ description: Extract text from PDFs, fill forms, merge documents. Use when worki
 
 **Bad:**
 ```yaml
-description: Helps with documents  # Too vague, no triggers
+description: Helps with documents
 ```
+
+---
+
+## Progressive Disclosure
+
+Skills load content in three stages:
+
+| Level | When Loaded | Token Cost | Content |
+|-------|------------|------------|---------|
+| **Metadata** | Always (startup) | ~100 tokens/skill | `name` and `description` |
+| **Instructions** | When skill triggers | Under 5K tokens | SKILL.md body |
+| **Resources** | As needed | Effectively unlimited | Referenced files, scripts |
+
+**Context budget:** ~2% of context window (fallback: 16,000 chars) for all skill descriptions combined. This accommodates roughly 15-30 skills.
+
+**Keep SKILL.md under 500 lines.** Move detailed content to `references/`.
+
+**Keep references one level deep.** Don't nest references within references.
+
+**Scripts execute, not load.** When a skill references a script, the agent runs it and receives the output. The script code never enters context.
+
+---
+
+## Match Freedom to Fragility
+
+The specificity of instructions should match the fragility of the task:
+
+| Freedom Level | When to Use | Format |
+|---------------|-------------|--------|
+| **High** | Multiple valid approaches | Text-based guidelines |
+| **Medium** | Preferred pattern exists | Pseudocode, parameterized scripts |
+| **Low** | Fragile, consistency critical | Exact scripts, specific commands |
+
+For deterministic operations, **bundle tested scripts** rather than asking the model to generate code each time.
 
 ---
 
@@ -105,20 +173,18 @@ Clarify concrete examples before writing:
 - What would a user say to trigger it?
 - What variations exist?
 
-Skip only if use cases are already clear.
-
-### Step 2: Plan Reusable Resources
+### Step 2: Plan Resources
 
 For each use case, identify:
-- **Scripts**: Code rewritten repeatedly (e.g., `rotate_pdf.py`)
-- **References**: Documentation Claude should reference (e.g., `schema.md`)
-- **Assets**: Templates/files used in output (e.g., `component.tsx.template`)
+- **Scripts:** Code rewritten repeatedly (e.g., `validate.py`)
+- **References:** Documentation to reference on-demand (e.g., `schema.md`)
+- **Assets:** Templates/files used in output (e.g., `template.txt`)
 
 ### Step 3: Create Structure
 
 ```bash
-mkdir -p ~/.claude/skills/my-skill/{references,scripts,assets}
-touch ~/.claude/skills/my-skill/SKILL.md
+mkdir -p .claude/skills/my-skill/{references,scripts,assets}
+touch .claude/skills/my-skill/SKILL.md
 ```
 
 ### Step 4: Write SKILL.md
@@ -126,37 +192,34 @@ touch ~/.claude/skills/my-skill/SKILL.md
 **Content order:**
 1. Overview (2-3 sentences)
 2. Prerequisites (if any)
-3. Quick Start (only for tool skills with scripts - shows invocation pattern)
+3. Quick Start (tool skills only — shows invocation pattern)
 4. Step-by-Step Guide (detailed instructions)
 5. Available Resources (reference to scripts/files)
 6. Troubleshooting
 
-**Note:** Process skills (creating-X, reviewing-X) don't need Quick Start - the step-by-step process IS the workflow. Quick Start is for tool skills where showing `./scripts/run.sh input.pdf` is valuable.
-
-**Keep under 500 lines.** Move detailed content to references/.
+Process skills (creating-X, reviewing-X) don't need Quick Start — the step-by-step process IS the workflow.
 
 **Writing style:**
 - Imperative form: "Run the script" not "You should run"
 - Third person in description
 - Front-load keywords for search
 
-### Step 5: Test the Skill
+### Step 5: Test
 
-Test before deploying. See [references/testing.md](references/testing.md) for complete methodology.
+See [references/testing.md](references/testing.md) for complete methodology.
 
 **Quick validation:**
-1. Trigger test - does skill activate on expected queries?
-2. Functional test - does workflow run without errors?
-3. Reference test - do referenced files load correctly?
-4. Script test - do bundled scripts execute?
+1. Trigger test — does skill activate on expected queries?
+2. Functional test — does workflow run without errors?
+3. Reference test — do referenced files load correctly?
+4. Script test — do bundled scripts execute?
+5. Cross-model test — Opus, Sonnet, and Haiku may need different detail levels
 
-**Testing depth by skill type:**
-| Type | Focus |
-|------|-------|
-| Reference | Accuracy, completeness |
-| Workflow | Steps work end-to-end |
-| Tool | Scripts handle edge cases |
-| Discipline | Pressure scenarios, rationalization |
+**Evaluation-driven development (recommended):**
+1. Run Claude on tasks WITHOUT skill, document failures
+2. Create test scenarios from observed failures
+3. Write minimal instructions addressing the gaps
+4. Re-test, compare, iterate
 
 ### Step 6: Iterate
 
@@ -167,111 +230,94 @@ After real usage or review feedback:
 
 ---
 
-## Evolving Existing Skills
+## Skill Composition
 
-When improving a skill based on feedback or review:
+### Skills and Agents Together
 
-### From Review Feedback
-
-1. Read the review findings
-2. Address each issue:
-   - Vague description → Add specific triggers
-   - Bloated content → Move to references/
-   - Missing coverage → Add new sections
-3. Re-test affected areas
-4. Update version notes if tracked
-
-### From Usage Feedback
-
-1. Document what went wrong or was unclear
-2. Identify root cause:
-   - Missing information?
-   - Unclear instructions?
-   - Outdated content?
-3. Make targeted fixes (don't over-engineer)
-4. Re-test the specific scenario
-
+**Skills can delegate to agents:**
+```yaml
 ---
-
-## Progressive Disclosure
-
-Skills use 3-level loading to manage context:
-
-| Level | When Loaded | Size Target |
-|-------|-------------|-------------|
-| Metadata (name + description) | Always (startup) | ~100 words |
-| SKILL.md body | When skill triggers | <500 lines |
-| Bundled resources | On-demand | Unlimited |
-
-**Keep SKILL.md lean.** Reference detailed content:
-
-```markdown
-## Advanced Configuration
-See [references/advanced.md](references/advanced.md) for complex scenarios.
+name: deep-research
+context: fork
+agent: Explore
+---
+Research $ARGUMENTS thoroughly...
 ```
 
-**Keep references one level deep** - don't nest references within references.
+**Agents can preload skills:**
+```yaml
+# .claude/agents/api-developer.md
+---
+skills:
+  - api-conventions
+  - error-handling-patterns
+---
+```
+
+### Dynamic Features (Claude Code)
+
+**String substitutions:** `$ARGUMENTS`, `$ARGUMENTS[N]`, `$N`, `${CLAUDE_SESSION_ID}`
+
+**Dynamic context injection:** `` !`command` `` runs shell commands before skill content is sent, replacing placeholder with output.
 
 ---
 
 ## Templates
 
-### Minimal Skill
+### Minimal Skill (Process)
 
 ```yaml
 ---
-name: processing-something
-description: Brief what. Use when [specific triggers].
+name: reviewing-something
+description: Reviews something for quality. Use when reviewing, checking, or auditing something. Triggers: "review something", "check something".
 ---
 
-# Processing Something
+# Reviewing Something
 
 ## Overview
 [2-3 sentences]
 
-## Quick Start
-[Most common use case with code example]
-
-## Step-by-Step
+## Process
 1. First step
 2. Second step
 3. Verify results
+
+## Common Issues
+| Issue | Fix |
+|-------|-----|
+| [Problem] | [Solution] |
 ```
 
-### Skill with Resources
+### Skill with Scripts (Tool)
 
 ```yaml
 ---
-name: generating-reports
-description: Detailed what. Use when [trigger 1], [trigger 2], or [trigger 3].
+name: processing-something
+description: Processes something with validation. Use when processing, converting, or transforming something.
 ---
 
-# Generating Reports
-
-## Prerequisites
-- Requirement 1
-- Requirement 2
+# Processing Something
 
 ## Quick Start
 ```bash
-./scripts/setup.sh
-./scripts/generate.sh my-project
+python scripts/process.py input.txt
 ```
 
 ## Workflow
-1. Run setup script
-2. Configure options
-3. Execute main script
-4. Verify output
+1. Run setup: `./scripts/setup.sh`
+2. Configure: edit `config.json`
+3. Process: `python scripts/process.py input.txt`
+4. Validate: `python scripts/validate.py output.txt`
 
 ## Available Scripts
-- `scripts/setup.sh` - Initial setup
-- `scripts/generate.sh` - Main execution
-- `scripts/validate.sh` - Validation
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `setup.sh` | Install dependencies | `./scripts/setup.sh` |
+| `process.py` | Main processing | `python scripts/process.py [input]` |
+| `validate.py` | Validate output | `python scripts/validate.py [output]` |
 
 ## References
 - [Configuration Guide](references/config.md)
-- [API Reference](references/api.md)
 
 ## Troubleshooting
 **Issue:** Common problem
@@ -282,18 +328,12 @@ description: Detailed what. Use when [trigger 1], [trigger 2], or [trigger 3].
 
 ## Self-Containment
 
-Skills should work standalone without external dependencies:
+Skills should work standalone:
 
-- **Don't reference external files** that may move (e.g., `tmp/`, user directories)
-- **Include examples inline** or in `references/` rather than pointing elsewhere
-- **Avoid dependencies on other skills** - each skill should be independently useful
-- **Don't add "Related Skills" sections** - creates coupling, adds maintenance burden, doesn't help Claude discover skills (descriptions do that)
-
-If content would be useful across multiple skills, consider whether it belongs in CLAUDE.md or a shared reference that's version-controlled with the project.
-
-**Prerequisites vs Related Skills:**
-- Prerequisites section is fine - states what must exist before using this skill
-- Related Skills section is not - creates unnecessary cross-references that become stale
+- Don't reference external files that may move
+- Include examples inline or in `references/`
+- Avoid dependencies on other skills
+- Don't add "Related Skills" sections — descriptions handle discovery
 
 ---
 
@@ -301,16 +341,18 @@ If content would be useful across multiple skills, consider whether it belongs i
 
 | Mistake | Fix |
 |---------|-----|
-| Vague description | Include specific trigger phrases |
+| Vague description | Include specific trigger phrases and "Use when" |
 | No "when to use" | Add: "Use when [conditions]" |
-| Too long SKILL.md | Move details to references/ |
-| Second person | Use imperative form |
-| Deeply nested refs | Keep references one level deep |
-| Windows paths | Always use forward slashes |
-| Agent-noun names | Use gerund form: "processing-x" not "x-processor" |
-| @file references | Use skill name only: "See creating-skills for..." |
-| External file refs | Keep examples/content within skill directory |
-| Related Skills section | Remove - creates coupling, descriptions handle discovery |
+| SKILL.md over 500 lines | Move details to `references/` |
+| Second person description | Use third person ("Processes..." not "I help...") |
+| Deeply nested references | Keep one level deep from SKILL.md |
+| Agent-noun names | Gerund form: `processing-x` not `x-processor` |
+| External file dependencies | Keep content within skill directory |
+| Related Skills section | Remove — creates coupling, descriptions handle discovery |
+| Human-oriented prose | Write imperative instructions for the model |
+| Platform-specific extensions as core | Keep extensions separate from portable content |
+| Explaining what the model knows | Only add context it doesn't already have |
+| Generating code the model could bundle | Use scripts for deterministic operations |
 
 ---
 
@@ -319,7 +361,8 @@ If content would be useful across multiple skills, consider whether it belongs i
 **Structure:**
 - [ ] SKILL.md exists with YAML frontmatter
 - [ ] `name` and `description` fields present
-- [ ] Name uses gerund form (verb-ing)
+- [ ] Name uses gerund form, matches directory name
+- [ ] Under 500 lines
 - [ ] Referenced files exist
 
 **Description:**
@@ -329,30 +372,16 @@ If content would be useful across multiple skills, consider whether it belongs i
 - [ ] Under 1024 characters
 
 **Content:**
-- [ ] Body under 500 lines
+- [ ] Written for models, not humans
 - [ ] Uses imperative form
-- [ ] Quick Start included (tool skills only)
-- [ ] References point to actual files
-- [ ] Self-contained (no external file dependencies)
+- [ ] Freedom matches fragility (scripts for deterministic ops)
+- [ ] Self-contained (no external dependencies)
+- [ ] References one level deep
 - [ ] No Related Skills section
+- [ ] Platform-specific extensions noted as non-portable
 
 **Testing:**
-- [ ] Skill triggers on expected queries
+- [ ] Triggers on expected queries
 - [ ] Workflow executes successfully
-- [ ] Examples are runnable
-
----
-
-## Additional Resources
-
-### Reference Files
-- **[references/testing.md](references/testing.md)** - Complete testing methodology
-- **[references/patterns.md](references/patterns.md)** - Workflow patterns and output templates
-- **[references/anthropic-guide.md](references/anthropic-guide.md)** - Official Anthropic best practices summary
-
-### Example Skills
-Browse existing skills in `.claude/skills/` for working examples.
-
-### External Resources
-- [Anthropic Skills Documentation](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills)
-- [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) - Community examples
+- [ ] Scripts execute (if any)
+- [ ] References load correctly (if any)
