@@ -264,4 +264,4 @@ quadrantChart
 - Use WebSearch for competitor research, pricing, comparisons
 - Use WebFetch for competitor and reference product websites
 - Use Read/Glob for code repository analysis
-- Spend no more than 5 minutes on additional research
+- Be thorough — exhaust high-quality sources before concluding. Stop when additional research doesn't change the decision, not when a timer expires. Optimize for quality, not time.

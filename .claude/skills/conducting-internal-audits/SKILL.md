@@ -31,7 +31,7 @@ Use `conducting-internal-audits` for formal scheduled audits.
 
 ### Annual Schedule
 
-Plan audits to cover all QMS areas over 12 months:
+Plan audits to cover all QMS areas over 12 months. With AI assistance, the quarterly rotation is a minimum baseline, not an aspirational target. Comprehensive audits can run more frequently — per increment where feasible.
 
 | Quarter | Focus Areas |
 |---------|-------------|

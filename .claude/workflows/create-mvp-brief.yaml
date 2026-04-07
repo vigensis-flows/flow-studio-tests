@@ -95,6 +95,11 @@ steps:
         - docs/product-definition/working/research-synthesis.md
         - docs/product-definition/working/mvp-options.md
 
+        If a product context file exists (.claude/context/product-context.md),
+        read it to understand what the product already has. Existing
+        capabilities should be included by default — they have zero
+        incremental build cost.
+
         Choose the primary option (or a coherent hybrid), sharpen the scope,
         state the hypotheses, define the revenue signal, and write the
         MVP Brief.

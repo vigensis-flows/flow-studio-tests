@@ -34,7 +34,7 @@ steps:
         - docs/product-definition/2-product-vision.md
         - docs/product-definition/3-product-strategy.md
 
-        Also read docs/concept-validation/brand-foundation.md if it exists,
+        Also read docs/reviews/brand-foundation.md if it exists,
         to align messaging with the brand foundation.
 
         Develop:
@@ -50,16 +50,16 @@ steps:
 
         ## Iteration Awareness
 
-        Check if docs/concept-validation/customer-pitch.md already exists.
+        Check if docs/reviews/customer-pitch.md already exists.
         If it does, read it first and refine based on the user instruction.
         Preserve what's still valid, update what needs to change.
         Note revisions in a "## Revision Notes" section at the end.
 
         ## Output
 
-        Save to: docs/concept-validation/customer-pitch.md
+        Save to: docs/reviews/customer-pitch.md
     output:
       path: context.review
     postconditions:
       - type: file_exists
-        path: "docs/concept-validation/customer-pitch.md"
+        path: "docs/reviews/customer-pitch.md"

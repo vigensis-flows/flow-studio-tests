@@ -127,5 +127,5 @@ Use this structure:
 - Cite sources for claims
 - Note confidence levels
 - Document what couldn't be determined in "Unknown"
-- Be thorough but concise — spend no more than 5 minutes on web research
+- Be thorough — exhaust high-quality sources before concluding. Stop when additional research doesn't change the decision, not when a timer expires. Optimize for quality, not time.
 - If user instruction was provided, reflect it throughout the analysis

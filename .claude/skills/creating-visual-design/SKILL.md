@@ -28,14 +28,14 @@ not what the user does.
 | Input | Source | Required |
 |-------|--------|----------|
 | Product slug | `$ARGUMENTS` | Yes |
-| MVP Brief | `docs/product-definition/1-mvp-brief.md` | Yes |
-| Vision | `docs/product-definition/2-product-vision.md` | Yes |
+| Vision | `docs/product-definition/1-product-vision.md` | Yes |
+| MVP Brief | `docs/product-definition/3-mvp-brief.md` | Yes |
 | Design Spec | `docs/product-definition/4-design-specification.md` | Yes |
 | User instruction | Workflow context | No |
 
 **Why these three?**
-- **MVP Brief:** Target user expectations (enterprise polish vs startup energy)
 - **Vision:** Product personality (professional, approachable, technical, warm)
+- **MVP Brief:** Target user expectations (enterprise polish vs startup energy)
 - **Design Spec:** Screen inventory and states that need styling
 
 **Explicitly NOT inputs:** Strategy (business model doesn't affect visuals)

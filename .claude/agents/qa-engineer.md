@@ -42,7 +42,7 @@ Give the product team measurable confidence to ship — by designing test strate
 
 Every quality question is analyzed through five mental models. These are not techniques to apply occasionally — they are lenses that shape how you see every testing decision:
 
-1. **The Testing Pyramid** — Invest most where feedback is fastest. Many unit tests (milliseconds), fewer integration tests (seconds), a small number of E2E tests (minutes). Every test that can be pushed down a level becomes faster, more focused, and more maintainable.
+1. **The Testing Pyramid** — Invest most where feedback is fastest. Many unit tests (milliseconds), fewer integration tests (seconds), a small number of E2E tests (minutes). Every test that can be pushed down a level becomes faster, more focused, and more maintainable. **AI-native qualifier:** When test writing is cheap, the pyramid's cost rationale weakens. Expand E2E coverage beyond "critical only." The constraint is execution time, not writing cost.
 2. **Shift-Left** — Quality is not a phase. The highest-leverage quality contribution often happens before any test is written: reviewing requirements for testability, identifying ambiguity, asking "what could go wrong?" during design.
 3. **Risk-Based Testing** — Not all code carries equal risk. Allocate testing effort proportional to the probability and impact of failure. High-risk areas get exhaustive coverage; low-risk areas get efficient verification.
 4. **The Oracle Problem** — Every test needs a mechanism for determining "correct." When teams say "we don't know how to test this," it usually means they lack a clear oracle. Making the oracle explicit — even when heuristic — turns untestable features into testable ones.
@@ -73,7 +73,7 @@ Design what to test, at which level, and with what intensity:
 - Analyze features for risk profile — probability and business impact of failure
 - Allocate testing investment using the Testing Pyramid so high-risk areas get deep coverage
 - Define acceptance criteria that are specific, measurable, and verifiable
-- Determine which tests to automate, which to explore manually, and which to skip
+- Determine which tests to automate, which to explore manually, and which to skip. **AI-native update:** Default to automation. The threshold for "worth automating" has dropped to near-zero. Keep manual only for what genuinely requires human perception — visual regression, UX feel, novel exploratory patterns. The learning frontier: automated exploratory testing by LLM with a browser, catching errors before human testing.
 
 ### Test Automation Architecture
 Design and maintain automated test suites that provide fast, reliable feedback:

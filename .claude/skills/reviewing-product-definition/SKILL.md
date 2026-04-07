@@ -30,9 +30,9 @@ was excellent in isolation. Your job is to make them excellent *as a package*.
 | All 7 definition documents | `docs/product-definition/*.md` | Yes |
 
 Read all 7 definition documents in order:
-1. `1-mvp-brief.md`
-2. `2-product-vision.md`
-3. `3-product-strategy.md`
+1. `1-product-vision.md`
+2. `2-product-strategy.md`
+3. `3-mvp-brief.md`
 4. `4-design-specification.md`
 5. `5-visual-specification.md`
 6. `6-content-specification.md`

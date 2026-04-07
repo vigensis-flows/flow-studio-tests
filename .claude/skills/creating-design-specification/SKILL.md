@@ -33,9 +33,9 @@ directly, and a visual designer can style it.
 | Input | Source | Required |
 |-------|--------|----------|
 | Product slug | `$ARGUMENTS` | Yes |
-| MVP Brief | `docs/product-definition/1-mvp-brief.md` | Yes |
-| Vision | `docs/product-definition/2-product-vision.md` | Yes |
-| Strategy | `docs/product-definition/3-product-strategy.md` | Yes |
+| Vision | `docs/product-definition/1-product-vision.md` | Yes |
+| Strategy | `docs/product-definition/2-product-strategy.md` | Yes |
+| MVP Brief | `docs/product-definition/3-mvp-brief.md` | Yes |
 | User instruction | Workflow context | No |
 
 **Why all three upstream documents?**
@@ -81,8 +81,7 @@ For each capability in the MVP Brief's scope, map the user flow:
 - How does the user know it worked?
 - What can go wrong and what happens then?
 
-Focus on the **primary flows** — the happy paths that deliver the core value.
-Secondary flows (settings, account management) get lighter treatment.
+Design all flows at full depth. Users don't experience primary vs. secondary — they experience quality or not. Optimize for consistency and quality across all flows.
 
 ### Step 4: Build the Screen Inventory
 
@@ -179,8 +178,8 @@ the experience?]
 ### Flow 2: [Secondary Flow Name]
 [Same structure — continue for each flow in the MVP scope]
 
-### Flow 3: [Tertiary Flow Name]
-[Lighter treatment for less critical flows]
+### Flow 3: [Additional Flow Name]
+[Same depth — all flows designed at full quality]
 
 ## Screen Inventory
 

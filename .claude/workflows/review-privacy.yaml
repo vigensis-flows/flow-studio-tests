@@ -50,16 +50,16 @@ steps:
 
         ## Iteration Awareness
 
-        Check if docs/concept-validation/privacy-review.md already exists.
+        Check if docs/reviews/privacy-review.md already exists.
         If it does, read it first and refine based on the user instruction.
         Preserve what's still valid, update what needs to change.
         Note revisions in a "## Revision Notes" section at the end.
 
         ## Output
 
-        Save to: docs/concept-validation/privacy-review.md
+        Save to: docs/reviews/privacy-review.md
     output:
       path: context.review
     postconditions:
       - type: file_exists
-        path: "docs/concept-validation/privacy-review.md"
+        path: "docs/reviews/privacy-review.md"

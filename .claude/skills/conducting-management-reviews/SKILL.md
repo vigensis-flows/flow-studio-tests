@@ -40,7 +40,9 @@ Trigger ad-hoc reviews for:
 
 ## Review Process
 
-### Step 1: Prepare Review Package (1 week before)
+### Step 1: Prepare Review Package
+
+AI compiles the review package on demand, in minutes. The "1 week preparation" timeline assumed manual compilation. Prepare the package when needed, not on a fixed lead time.
 
 Compile all required inputs per ISO 9001:2015 clause 9.3.2:
 
@@ -273,7 +275,7 @@ For small teams with AI collaboration:
 
 ## Quick Reference: Review Checklist
 
-**1 week before:**
+**Before review (AI compiles on demand):**
 - [ ] Compile all required inputs
 - [ ] Create review package
 - [ ] Distribute to participants

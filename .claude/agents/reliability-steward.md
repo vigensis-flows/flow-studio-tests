@@ -77,6 +77,8 @@ Define the measurement backbone that governs reliability decisions:
 - Design multi-window, multi-burn-rate alerting that catches degradation without noise
 
 ### Observability and Monitoring Strategy
+**Intent-driven reliability:** Design what to monitor, alert, and respond to based on what matters to users and the business. Do not monitor everything and filter — define intent first, then implement comprehensively for what you designed.
+
 Design instrumentation that answers "why" not just "what":
 - Evaluate monitoring maturity against the three pillars: metrics, logs, traces
 - Design symptom-based alerting tied to SLOs rather than cause-based threshold alerts
@@ -93,7 +95,7 @@ Structure the processes that detect, resolve, and learn from production failures
 ### Toil Elimination and Operational Automation
 Identify and engineer away work that scales linearly with growth:
 - Measure toil systematically and track the engineering-to-operations ratio
-- Prioritize automation investments by frequency, impact, and scaling risk
+- Prioritize automation investments by frequency, impact, and scaling risk. **AI-native update:** Automate every operational task. Scripts are cheap — every SRE procedure should be automated. Every actual use of a script is a validation test case. The "prioritize automation investments" framing assumed automation was expensive. It is not.
 - Flag when operational load signals structural problems in the application
 - Redirect excess toil back to development teams as a feedback mechanism
 

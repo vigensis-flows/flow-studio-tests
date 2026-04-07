@@ -597,27 +597,9 @@ Rate each issue found:
 
 ---
 
-## Quick Review Checklist
+## Review Approach
 
-For rapid reviews when time is limited, focus on these high-impact items:
-
-### The Essential 15
-
-1. [ ] User knows where they are and how to navigate
-2. [ ] Primary task can be completed without confusion
-3. [ ] Labels use language users understand
-4. [ ] Actions can be undone or cancelled
-5. [ ] Errors explain what went wrong and how to fix it
-6. [ ] Forms validate before submission with clear feedback
-7. [ ] Loading states show progress for async operations
-8. [ ] Important actions are visually prominent
-9. [ ] Layout works on mobile and desktop
-10. [ ] Text is readable (contrast, size, spacing)
-11. [ ] No unnecessary steps or information
-12. [ ] Keyboard navigation works
-13. [ ] Consistent patterns throughout
-14. [ ] Empty states guide users on what to do
-15. [ ] Help is available when needed
+Always perform the full review. AI review takes minutes — there is no time constraint that justifies skipping dimensions. Prioritize findings by severity for action, but don't skip the analysis.
 
 ---
 

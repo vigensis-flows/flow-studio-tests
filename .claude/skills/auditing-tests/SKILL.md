@@ -347,7 +347,7 @@ Grep "on_exit" in test/ (check if should be inline cleanup)
 
 ## Periodic Full Audit
 
-For a complete suite audit (run quarterly or after major changes):
+Audit new and modified tests as part of the change process. Full suite audit when significant patterns emerge (new approach, major refactor), not on a quarterly calendar.
 
 1. Audit ALL test files
 2. Generate full report with summary

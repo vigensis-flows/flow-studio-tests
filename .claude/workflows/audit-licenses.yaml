@@ -46,16 +46,16 @@ steps:
 
         ## Iteration Awareness
 
-        Check if docs/concept-validation/license-audit.md already exists.
+        Check if docs/reviews/license-audit.md already exists.
         If it does, read it first and refine based on the user instruction.
         Preserve what's still valid, update what needs to change.
         Note revisions in a "## Revision Notes" section at the end.
 
         ## Output
 
-        Save to: docs/concept-validation/license-audit.md
+        Save to: docs/reviews/license-audit.md
     output:
       path: context.review
     postconditions:
       - type: file_exists
-        path: "docs/concept-validation/license-audit.md"
+        path: "docs/reviews/license-audit.md"

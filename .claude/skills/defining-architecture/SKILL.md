@@ -1,19 +1,19 @@
 ---
-name: creating-architecture
+name: defining-architecture
 description: >
-  Creates the architecture blueprint — how we build it. Defines domain model,
+  Defines the architecture blueprint — how we build it. Defines domain model,
   key boundaries, data design, and technical decisions that affect multiple
-  components. Reads the MVP Brief, Vision, Strategy, and Design Spec as inputs.
-  Lean by design — focuses on what's different or hard, not standard patterns.
-  Agent is selected by the workflow based on tech stack (elixir-alchemist for
-  Elixir, tech-smith for other stacks). Use after the Design Specification
-  is complete.
+  components. Reads the Tech Stack Decision, MVP Brief, Vision, Strategy, and
+  Design Spec as inputs. Lean by design — focuses on what's different or hard,
+  not standard patterns. The specialist agent is selected by the determine-tech-stack
+  step upstream (elixir-alchemist for Elixir, tech-smith for other stacks).
+  Use after determining-tech-stack is complete.
 argument-hint: "<product-slug>"
 ---
 
-# Creating Architecture
+# Defining Architecture
 
-You are creating a lean architecture document for an MVP. This is not a
+You are defining a lean architecture document for an MVP. This is not a
 comprehensive technical specification — it focuses on the decisions that
 matter: domain model, key boundaries, data design, and technical choices
 that affect multiple components. Experienced engineers handle implementation
@@ -24,13 +24,19 @@ details.
 | Input | Source | Required |
 |-------|--------|----------|
 | Product slug | `$ARGUMENTS` | Yes |
+| Tech Stack Decision | `docs/product-definition/working/tech-stack-decision.md` | Yes |
 | Vision | `docs/product-definition/1-product-vision.md` | Yes |
 | Strategy | `docs/product-definition/2-product-strategy.md` | Yes |
 | MVP Brief | `docs/product-definition/3-mvp-brief.md` | Yes |
 | Design Spec | `docs/product-definition/4-design-specification.md` | Yes |
 | User instruction | Workflow context | No |
 
-**Why all four?**
+**Read the Tech Stack Decision first.** It contains the recommended stack,
+rationale, and architecture guidance from the Tech Smith. Your architecture
+must be grounded in the chosen stack — use its idioms, patterns, and ecosystem.
+
+**Why all five documents?**
+- **Tech Stack Decision:** The chosen stack, rationale, and guidance for the architect
 - **Vision:** Long-term direction that affects extensibility decisions
 - **Strategy:** Business model implications — multi-tenancy, pricing tiers,
   feature gating, metering, compute budget (see Architecture Implications section)
@@ -74,8 +80,9 @@ Save to `docs/product-definition/7-architecture-blueprint.md`.
 
 ## Output Structure
 
-The structure adapts based on tech stack. Below is the Elixir/Ash variant —
-adapt for other stacks while maintaining equivalent depth.
+The structure adapts based on the chosen tech stack. Below is the Elixir/Ash
+variant — adapt for other stacks while maintaining equivalent depth and using
+the stack's native patterns and terminology.
 
 ```markdown
 # Architecture: [Product Name]
@@ -84,6 +91,16 @@ adapt for other stacks while maintaining equivalent depth.
 
 [2-3 sentences: what this system does and the key architectural insight.
 What makes this architecture different from a generic CRUD app?]
+
+## Technology Stack
+
+**Stack:** [Full stack from the Tech Stack Decision]
+**Rationale:** [1-2 sentences — why this stack for this product. Drawn from
+the Tech Stack Decision, not repeated analysis.]
+
+[This section documents the stack decision within the architecture — the
+definitive record. The working/tech-stack-decision.md file contains the
+full analysis with alternatives considered; this section states the choice.]
 
 ## Domain Model
 
@@ -190,6 +207,8 @@ Experienced engineers make these decisions during implementation.
 
 ## Alignment Check
 
+- [ ] Technology Stack section documents the chosen stack and rationale
+- [ ] Architecture uses the chosen stack's native patterns and idioms
 - [ ] Domain model reflects the business concepts from the MVP Brief
 - [ ] Data flows support the user flows in the Design Spec
 - [ ] Multi-tenancy and feature gating align with the Strategy's business model

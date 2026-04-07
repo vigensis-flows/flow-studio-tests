@@ -201,4 +201,4 @@ Representative quotes:
 - Use WebFetch to read reviews (respect rate limits)
 - Search Reddit, HN, Twitter for discussions about the reference product and competitors
 - Use actual user quotes where possible
-- Spend no more than 5 minutes on research
+- Be thorough — exhaust high-quality sources before concluding. Stop when additional research doesn't change the decision, not when a timer expires. Optimize for quality, not time.

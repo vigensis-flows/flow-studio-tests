@@ -1,68 +1,143 @@
 ---
 name: writing-mvp-brief
 description: >
-  Makes the MVP bet and documents it as the MVP Brief — the foundational document
-  of the product definition. Selects the primary option from the options analysis,
-  defines scope, states hypotheses, and produces a brief that the entire team can
-  build from. Use as the final step in creating an MVP Brief, after
-  exploring-mvp-options.
+  Defines the first step in detail — the MVP that tests the strategy's most
+  important hypotheses. Uses the Venture Builder's recommendation from the
+  MVP Bets analysis as the default direction, or the founder's instruction
+  if provided.
 argument-hint: "<product-slug>"
 ---
 
 # Writing the MVP Brief
 
-You are acting as the Product Maestro writing the MVP Brief — the single most
-important document in the product definition. This document makes the bet:
-who we're building for, what we're building, why we believe it will work,
-and how we'll know if we're right.
+You are acting as the Product Maestro writing the MVP Brief — the detailed
+plan for the first step toward the vision, within the strategy. This document
+takes the founder's direction on the bets and turns it into a complete,
+buildable plan: who we're building for, what we're building, why we believe
+it will work, and how we'll know if we're right.
 
-**This is not a summary of the options analysis.** The options analysis explored
-the space. This document makes the choice — and owns the consequences. Every
-sentence must earn its place. Every claim must have evidence or be marked as
-a hypothesis.
+**This is not a summary of the bets analysis.** The vision set the destination,
+the strategy defined the path, and the bets explored concrete starting points.
+This document designs an MVP that tests the most important entry hypotheses —
+often in parallel — defining scope, hypotheses, business model, and success
+criteria with enough precision that a team can build from it. Every sentence
+must earn its place. Every claim must have evidence or be marked as a hypothesis.
 
 ## Inputs
 
 | Input | Source | Required |
 |-------|--------|----------|
 | Product slug | `$ARGUMENTS` | Yes |
-| Research synthesis | `docs/product-definition/working/research-synthesis.md` | Yes |
-| Options analysis | `docs/product-definition/working/mvp-options.md` | Yes |
-| Product Brief research | `docs/product-brief/*.md` | For reference |
+| Vision | `docs/product-definition/1-product-vision.md` | Yes |
+| Strategy | `docs/product-definition/2-product-strategy.md` | Yes |
+| MVP Bets | `docs/product-definition/working/mvp-bets.md` | Yes |
+| Research synthesis | `docs/product-definition/working/research-synthesis.md` | For reference |
+| Product context | `.claude/context/product-context.md` | Optional |
 | User instruction | Workflow context | No |
 
-Read the options analysis first. It contains the decisions to be made.
-Read the research synthesis for evidence. Refer to original research only
-for specific data points.
+Read the vision and strategy first — they define the destination and the path.
+Read the MVP bets analysis — it contains the explored bets, their evaluation,
+parallel testability assessment, and the Venture Builder's recommendation.
 
-**If user instruction is provided**, it may indicate which option the founder
-prefers, additional constraints, or feedback from a previous iteration.
-Weight it heavily — the founder's judgment matters, especially on segment
-and pricing choices where they have context you don't.
+**If user instruction is provided**, it contains the founder's direction on
+which bet(s) to pursue, modifications, or additional constraints. Weight it
+heavily — the founder's judgment matters.
+
+**If no user instruction is provided**, use the Venture Builder's recommendation
+from the bets analysis as the starting direction. The bets document includes
+a recommendation ranked by hypothesis risk, parallel testability, and strategic
+fit. This recommendation is your default — proceed with it autonomously.
 
 ## Process
 
-### Step 1: Choose the Primary Option
+### Step 0: Understand What Already Exists
 
-Select one option from the options analysis as the primary bet. This may be:
-- One of the analyzed options as-is
-- A hybrid that combines elements (only if internally coherent)
-- A variation informed by the founder's instruction
+If a product context file exists (`.claude/context/product-context.md` or equivalent),
+read it. If the product already has working capabilities, understand them before
+making scope decisions.
 
-The choice must be justified. State why this option over the others.
-"The founder preferred it" is a valid reason when combined with evidence.
+**Existing, working capabilities change the scope equation fundamentally.**
+Including them has near-zero incremental cost — the engineering already happened.
+Excluding them discards differentiation for no build-time savings. The question
+for existing products is not "what's the minimum to build?" but "what's the
+minimum to add (billing, onboarding, positioning) to make existing capabilities
+reach revenue signal?"
+
+### Step 1: Navigate the Bets
+
+The bets analysis contains the Venture Builder's recommendation on which bets
+to pursue and how they can be tested in parallel. Use the recommendation as
+the starting direction — or the user instruction if one was provided.
+
+The Product Maestro's job is NOT to pick one bet — it's to design an MVP that
+tests multiple entry hypotheses simultaneously. The 3-5 bets from the Venture
+Builder likely share most capabilities (they're within the same strategy) and
+differ primarily in go-to-market: segment, pricing, positioning, channel.
+
+**1. Map what's shared vs. what varies.** Review all bets. Identify:
+- **Product core** — the capabilities all viable bets need. This is what we build.
+- **Entry variations** — where the bets differ: packaging, pricing tiers,
+  positioning, target segment emphasis, distribution channel. This is what we
+  test in parallel.
+
+**2. Design one MVP with parallel tests.** The MVP should have:
+- **(a) A product core** that supports all viable bets. Don't narrow the
+  product to fit one bet when the same capabilities serve several.
+- **(b) Entry variations** that test different hypotheses in parallel —
+  different pricing tiers, different landing pages, different channel
+  experiments, different positioning for different segments. These are
+  lightweight go-to-market variations, not separate products.
+- **(c) Clean signal separation** — define what observable behavior
+  distinguishes each entry variation's success or failure. If you can't tell
+  which bet is winning from the data, you're not testing — you're guessing.
+
+**3. When to pick one instead.** Default to navigating multiple bets, not
+picking. Only collapse to a single bet when:
+- Bets require genuinely different product capabilities (not just different
+  positioning of the same capability)
+- Parallel go-to-market is not feasible (e.g., the product requires deep
+  customization per segment that changes the core experience)
+- The founder explicitly directs a single-bet approach
+
+Even when picking one, document what was set aside and the conditions under
+which it would be revisited.
+
+**Check for hypothesis reduction.** If the resulting MVP is significantly
+narrower than what the strategy calls for — if the strategy identified a bold
+opportunity and the MVP retreats to a safe subset — name that explicitly.
+Is the narrowing justified by evidence (e.g., sovereign deployment has 18-month
+sales cycles), or is it an unexamined assumption (e.g., "broad scope is risky")?
+Find the smallest test for the bold hypothesis, don't reduce the hypothesis
+to fit a small test.
 
 ### Step 2: Sharpen the Scope
 
-Apply the MVP Scope Test one more time to the chosen option's capabilities.
-Be ruthless. The brief should describe the smallest product that:
-- Tests the most important hypothesis
+Apply the MVP Scope Test to **the product core** (new work only). Existing,
+working capabilities are included by default — they already passed their own
+validation by being built and tested. The scope test applies to the shared
+product core, not to individual entry variations (which are go-to-market
+variations, not product scope).
+
+For new capabilities, the brief should describe the smallest product that:
+- Supports the entry variations identified in Step 1
+- Tests the most important hypotheses across bets
 - Delivers enough value that someone would pay
 - Is a complete product, not a demo or prototype
 
 For every capability, explicitly state whether it's in or out, and why.
+For existing capabilities that are excluded, the reason must be stronger than
+"scope discipline" — name the specific harm of including them.
 
 ### Step 3: State the Hypotheses
+
+Hypotheses should be derived from two questions:
+1. **What must we prove to achieve the vision?** — The vision defines where
+   we're going. What assumptions, if wrong, would mean we can never get there?
+2. **What could kill this?** — What risks, if they materialize, would make
+   the strategy unviable?
+
+These are not generic "will users pay and use this?" questions. They are
+specific to *this* product's vision and strategy.
 
 Write 3 hypotheses — one for each dimension:
 
@@ -75,6 +150,7 @@ Each hypothesis must be:
 - **Testable** — the MVP as scoped can provide signal
 - **Falsifiable** — there's a clear "we were wrong" outcome
 - **Consequential** — if wrong, it changes what we build next
+- **Connected to the vision** — failing this hypothesis threatens the long-term destination, not just this MVP
 
 ### Step 4: Define the Revenue Signal
 
@@ -87,20 +163,82 @@ The MVP must have a path to revenue. Define:
 "We'll figure out monetization later" is not acceptable. The MVP Brief
 exists to test whether the model works — you can't test what you haven't defined.
 
+**Freemium trap check:** If the model includes a free tier, evaluate the
+conversion trigger for the specific target customer — not generically:
+
+- Does the free tier fully satisfy the target customer's core job? If yes,
+  there is no conversion trigger — the free offer is the product's main competitor.
+- Is the target customer's usage recurring or one-shot? If the customer has
+  a single job (e.g., one product to validate, one assessment to run), they
+  may never need the paid tier. The free tier gave them what they needed.
+- What is the compute cost per free user? At what conversion rate does the
+  free tier's cost justify itself as acquisition spending?
+- Size this risk explicitly. If the free tier is likely to satisfy the core
+  job completely for the target customer, flag it as a critical model risk.
+
+### Step 4b: Business Viability Check
+
+Revenue signal is necessary but not sufficient. The model must also sustain the
+business. Before writing the brief, sanity-check the business viability:
+
+- **At the proposed price point and a conservative Year 1 customer count, does
+  the revenue cover the founding team's actual operating costs?** Not just
+  infrastructure — people, rent, tools, taxes. A team in a high-cost location
+  (e.g., Switzerland, SF, London) has a higher cost floor than a solo founder
+  in a low-cost market. Be specific.
+- **How many simultaneously paying customers are needed to break even?** If
+  the answer is 200+, this is a venture-scale play that needs external funding
+  or a bridge revenue source — acknowledge that in the brief. If the answer is
+  30-80, it's achievable for a bootstrapped team within 12-18 months.
+- **What bridge is needed?** If Year 1 revenue won't cover costs, name the
+  bridge: founder savings, consulting revenue, part-time work, or external
+  investment. "We'll figure it out" is not a bridge — it's hope.
+- **Does a higher price point make the model viable with fewer customers?**
+  If break-even at $99/month requires 250 customers but break-even at $300/month
+  requires 80, the pricing decision is also a viability decision. Flag the
+  trade-off explicitly.
+
+If the model fails the viability check at the proposed price, don't just
+note the risk — reconsider the pricing. A model that produces revenue signal
+but can't sustain the business is a hobby, not a venture.
+
 ### Step 5: Write the Brief
 
-Save to `docs/product-definition/1-mvp-brief.md`.
+Save to `docs/product-definition/3-mvp-brief.md`.
 
 ## Output Structure
 
 ```markdown
 # MVP Brief: [Product Name]
 
-## The Bet
+## The Bets
 
-[One paragraph — 3-5 sentences. What we're building, for whom, and why we
-believe it will work. This is the elevator pitch of the MVP. A reader should
-understand the entire concept after this paragraph.]
+[Which entry hypotheses this MVP tests in parallel. For each bet: the target
+segment, positioning, pricing approach, and distribution channel. Explain what
+they share (the product core) and where they diverge (go-to-market variations).
+If only one bet is being pursued, state why parallel testing was not feasible
+and what was set aside.]
+
+## Signal Separation
+
+[How each entry variation produces distinguishable signals. Define the
+observable behaviors, metrics, or conversion events that tell you which bet
+is working and which is not. If you can't distinguish signal from noise
+between bets, the parallel design needs rework. For each variation: what
+does success look like? What does failure look like? What data do you collect
+and how do you attribute it?]
+
+## Vision Alignment
+
+[How this MVP is the first concrete step toward the product vision. Reference
+the vision document — don't restate it. Explain what this MVP proves that
+matters for the long-term destination.]
+
+## Strategic Context
+
+[How this MVP executes the strategy. Which strategic priorities does it
+address? What competitive positioning does it establish? Reference the
+strategy document for the full picture.]
 
 ## Problem
 
@@ -184,18 +322,21 @@ that's not listed above, these boundaries help decide in or out.]
 
 ### 1. Value Hypothesis
 **We believe** [specific assumption about user value]
+**This matters for the vision because** [why this threatens the long-term destination if wrong]
 **MVP tests this by** [what the MVP includes/measures to test this]
 **We'll know we're right when** [specific, measurable signal]
 **We'll know we're wrong when** [specific, measurable counter-signal]
 
 ### 2. Business Hypothesis
 **We believe** [specific assumption about business viability]
+**This matters for the vision because** [why this threatens the long-term destination if wrong]
 **MVP tests this by** [what the MVP includes/measures to test this]
 **We'll know we're right when** [specific, measurable signal]
 **We'll know we're wrong when** [specific, measurable counter-signal]
 
 ### 3. Usability Hypothesis
 **We believe** [specific assumption about user capability]
+**This matters for the vision because** [why this threatens the long-term destination if wrong]
 **MVP tests this by** [what the MVP includes/measures to test this]
 **We'll know we're right when** [specific, measurable signal]
 **We'll know we're wrong when** [specific, measurable counter-signal]
@@ -228,17 +369,16 @@ This is not a roadmap — it's the logical next move.]
 ## What This Document Enables
 
 With this brief approved, the team proceeds to create:
-- **Product Vision** — where this goes long-term
-- **Product Strategy** — how we win
 - **Design Specification** — how the product works
 - **Visual Specification** — how it looks
 - **Content Specification** — what it says
+- **Tech Stack Decision** — what we build with
 - **Architecture Blueprint** — how we build it
 ```
 
 ## Iteration Awareness
 
-Check if `docs/product-definition/1-mvp-brief.md` already exists.
+Check if `docs/product-definition/3-mvp-brief.md` already exists.
 
 **If it exists** — this is a refinement iteration:
 - Read the existing document first
@@ -248,18 +388,23 @@ Check if `docs/product-definition/1-mvp-brief.md` already exists.
 - Preserve what works, update what needs to change
 - Add a `## Revision Notes` section at the end noting what changed and why
 
-**If it doesn't exist** — create it fresh from the options analysis.
+**If it doesn't exist** — create it fresh from the vision, strategy, and
+chosen bet.
 
 ## Quality Standards
 
-- **The Bet paragraph must be compelling in isolation.** If someone reads
-  only that paragraph, they should understand what this product is and
-  want to know more.
+- **The Bets section must be compelling in isolation.** If someone reads
+  only that section, they should understand what this MVP tests, how the
+  bets relate, and what distinguishes them.
+- **Vision Alignment must be substantive.** Not "this aligns with the vision"
+  but specifically how this MVP proves something that matters for the
+  long-term destination.
 - **Every capability in scope must pass the MVP Scope Test.** No exceptions,
   no "nice to haves" that snuck in.
-- **Hypotheses must be falsifiable.** "Users will like it" is not falsifiable.
-  "Solo founders will complete a product brief within 30 minutes without
-  asking for help" is falsifiable.
+- **Hypotheses must be falsifiable and vision-connected.** "Users will like it"
+  is not falsifiable. "Solo founders will complete a product brief within
+  30 minutes without asking for help" is falsifiable. Each hypothesis must
+  state why it matters for the vision, not just for this MVP.
 - **Unit economics must be directionally viable.** If the napkin math shows
   negative gross margins at any scale, the model doesn't work.
 - **Reachability must be specific.** "Social media marketing" is not specific.
@@ -275,21 +420,25 @@ Check if `docs/product-definition/1-mvp-brief.md` already exists.
 | Anti-Pattern | Problem | Fix |
 |--------------|---------|-----|
 | **Feature list disguised as scope** | Lists features, not outcomes | Describe what changes for the customer |
-| **Hedged bets** | "We'll target A or B depending on..." | Pick one. The brief IS the decision. |
+| **Undifferentiated bets** | "We'll target A or B depending on..." | Design parallel tests with clean signal separation. Each bet needs its own success/failure criteria. |
 | **Missing falsification** | "We'll know when users engage" | Define "engage" — frequency, depth, retention |
 | **Optimistic unit economics** | Ignores compute costs or support | Include real cost estimates, not just revenue |
 | **Generic risks** | "Competition" | "8090 launches self-service at $99/mo before we ship" |
 | **No reachability plan** | "The market is large" | How do you reach person #1? |
 | **Scope creep in "Expansion Path"** | Turns into a roadmap | One logical next move, not a feature backlog |
+| **Restating the vision** | Copies paragraphs from vision/strategy | Reference those documents, add new specificity |
+| **Disconnected hypotheses** | Hypotheses don't trace to vision | Each hypothesis must say why it matters for the destination |
 
 ## What Happens Next
 
-The MVP Brief is the foundation. All subsequent documents build on it:
-- Vision uses it to articulate the long-term direction
-- Strategy uses it to define how to win
-- Design Spec uses it to define user flows and interactions
-- Content Spec uses it to define voice and messaging
-- Architecture uses it to define the domain model and technical approach
+The MVP Brief is the last strategic document. All subsequent documents build
+on it to define how to execute:
+- **Design Specification** uses it to define user flows and interactions
+- **Visual Specification** uses it to define how the product looks
+- **Content Specification** uses it to define voice and messaging
+- **Tech Stack Decision** uses it to evaluate technology options
+- **Architecture Blueprint** uses it to define the domain model and technical approach
 
-If the brief changes, downstream documents may need updating.
-This is by design — the brief is the source of truth for what we're building.
+The brief references the Vision and Strategy — it does not replace them.
+If the brief reveals tensions with the strategy, surface them explicitly
+rather than silently diverging.

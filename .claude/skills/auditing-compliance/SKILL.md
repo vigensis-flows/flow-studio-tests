@@ -172,12 +172,14 @@ For each required document:
 
 ## Audit Schedule
 
+Audit every increment — at minimum, every PR that changes process-relevant artifacts. Fix every finding unless impact is beyond reasonable. Rate findings by contribution to quality, not by effort to fix. Calculate remediation effort at AI coding agent speed, not human speed.
+
 | Audit Type | Frequency | Scope |
 |------------|-----------|-------|
-| Increment spot-check | Weekly | Random sample of active/completed increments |
-| Full increment audit | Per increment | At quality gates (pre-Deliver, final acceptance) |
-| Documentation audit | Monthly | All required documentation |
-| Process compliance | Quarterly | Full PDAI adherence across organization |
+| Increment audit | Every increment | At quality gates (pre-Deliver, final acceptance) |
+| PR spot-check | Every PR with process artifacts | Changed artifacts against requirements |
+| Documentation audit | Per increment | All required documentation for the increment |
+| Process compliance | Quarterly (minimum) | Full PDAI adherence across organization |
 
 ---
 

@@ -3,9 +3,10 @@ name: synthesizing-product-research
 description: >
   Synthesizes the Product Brief research package into a focused working document
   that surfaces what matters, identifies tensions, and frames the decisions the
-  MVP Brief needs to make. This is not a summary — it's analytical compression
-  across four perspectives (product, design, business, engineering). Use as the
-  first step in creating an MVP Brief.
+  product definition needs to make. This is not a summary — it's analytical
+  compression across four perspectives (product, design, business, engineering).
+  Use as the first step in creating a product definition — feeds directly into
+  the Product Vision.
 argument-hint: "<product-slug>"
 ---
 
@@ -250,12 +251,15 @@ the MVP definition. Not all risks — the load-bearing ones.]
 | **Summary, not synthesis** | Restates each document sequentially | Connect findings across documents |
 | **Everything is important** | 20 pains, 10 tensions, 8 risks | Ruthlessly filter to what changes MVP decisions |
 | **Premature recommendation** | "We should target segment X" | Present evidence, let Phase 2 decide |
+| **Strategic pre-framing** | Frames conclusions that constrain downstream options: "strongest differentiators are hardest to monetize," "broad scope is risky" | Present evidence and tensions. Strategic conclusions belong to the options analysis and MVP brief, not the synthesis. If a differentiator is strong, say so. If monetization is uncertain, say that. Don't package these into a strategic frame that biases toward narrow scope. |
+| **Effort inflation** | Implying that broad scope = long build time, or that including more capabilities = more risk | Do not estimate build effort or imply build timelines. The synthesis is about market evidence, user needs, and competitive reality — not engineering feasibility. That assessment belongs to the options analysis. With AI-native development, scope ≠ time. |
 | **Missing tensions** | Only presents one-sided findings | Look for where research contradicts itself |
 | **Jargon escalation** | Introduces BMC, JTBD, TAM where research used plain language | Match the research's vocabulary |
 | **Ignoring the reality check** | Only presents optimistic findings | The reality check exists for a reason — integrate its warnings |
 
 ## What Happens Next
 
-This synthesis feeds into `exploring-mvp-options`, where the team explores
-2-3 viable segment + business model + scope combinations. The synthesis
-provides the evidence base; the next step makes the choices.
+This synthesis feeds directly into `creating-product-vision`, where the
+Product Maestro articulates the north star — where this product is going.
+The synthesis provides the evidence base for the vision. After the vision,
+`creating-product-strategy` defines how to win. The synthesis informs both.

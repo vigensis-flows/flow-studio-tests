@@ -21,17 +21,17 @@ is invisible; bad content breaks the experience.
 | Input | Source | Required |
 |-------|--------|----------|
 | Product slug | `$ARGUMENTS` | Yes |
-| MVP Brief | `docs/product-definition/1-mvp-brief.md` | Yes |
-| Vision | `docs/product-definition/2-product-vision.md` | Yes |
-| Strategy | `docs/product-definition/3-product-strategy.md` | Yes |
+| Vision | `docs/product-definition/1-product-vision.md` | Yes |
+| Strategy | `docs/product-definition/2-product-strategy.md` | Yes |
+| MVP Brief | `docs/product-definition/3-mvp-brief.md` | Yes |
 | Design Spec | `docs/product-definition/4-design-specification.md` | Yes |
 | User instruction | Workflow context | No |
 
 **Why all four?**
-- **MVP Brief:** Target user, their context, their language
 - **Vision:** Product personality — is this an expert tool or a friendly guide?
 - **Strategy:** Positioning and value proposition — how we describe what we do.
   Pricing communication — how we talk about money
+- **MVP Brief:** Target user, their context, their language
 - **Design Spec:** Screen inventory, empty states, error states, onboarding
   flow — the specific contexts that need copy
 

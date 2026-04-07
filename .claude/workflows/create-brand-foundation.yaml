@@ -47,16 +47,16 @@ steps:
 
         ## Iteration Awareness
 
-        Check if docs/concept-validation/brand-foundation.md already exists.
+        Check if docs/reviews/brand-foundation.md already exists.
         If it does, read it first and refine based on the user instruction.
         Preserve what's still valid, update what needs to change.
         Note revisions in a "## Revision Notes" section at the end.
 
         ## Output
 
-        Save to: docs/concept-validation/brand-foundation.md
+        Save to: docs/reviews/brand-foundation.md
     output:
       path: context.review
     postconditions:
       - type: file_exists
-        path: "docs/concept-validation/brand-foundation.md"
+        path: "docs/reviews/brand-foundation.md"

@@ -12,7 +12,7 @@ description: >
   "why are users dropping off".
 emoji: "🎨"
 domain: product-design
-principles: product-trio-manifesto
+
 ---
 
 <role>

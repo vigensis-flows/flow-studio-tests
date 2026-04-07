@@ -11,7 +11,7 @@ description: >
   "technical feasibility", "system design".
 emoji: "⚙️"
 domain: software-engineering
-principles: product-trio-manifesto
+
 ---
 
 <role>

@@ -38,7 +38,7 @@ steps:
         - docs/product-definition/6-content-specification.md
         - docs/product-definition/7-architecture-blueprint.md
 
-        Also read docs/concept-validation/brand-foundation.md if it exists,
+        Also read docs/reviews/brand-foundation.md if it exists,
         to align messaging with the brand foundation.
 
         Develop slide content for:
@@ -56,16 +56,16 @@ steps:
 
         ## Iteration Awareness
 
-        Check if docs/concept-validation/investor-pitch.md already exists.
+        Check if docs/reviews/investor-pitch.md already exists.
         If it does, read it first and refine based on the user instruction.
         Preserve what's still valid, update what needs to change.
         Note revisions in a "## Revision Notes" section at the end.
 
         ## Output
 
-        Save to: docs/concept-validation/investor-pitch.md
+        Save to: docs/reviews/investor-pitch.md
     output:
       path: context.review
     postconditions:
       - type: file_exists
-        path: "docs/concept-validation/investor-pitch.md"
+        path: "docs/reviews/investor-pitch.md"
