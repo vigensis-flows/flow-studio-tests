@@ -6,6 +6,58 @@ Instructions for AI coding agents working on this project.
 
 **This is CRITICAL STRATEGIC INFRASTRUCTURE** — quality over speed, explicit over implicit, tested over untested.
 
+## AI-Native Economics — CRITICAL
+
+This is an AI-native company. Expert AI agents do the heavy lifting — coding, research, analysis, design, writing. The old economics where implementation effort dominated decisions have collapsed. This changes HOW you reason about every recommendation, prioritization, and scope decision.
+
+### The Inversion
+
+| Old assumption (training data bias) | New reality (this company) |
+|---|---|
+| Implementation is expensive → manage scope to fit capacity | Implementation is near-zero cost → scope is bounded by clarity, not effort |
+| Defer complex work to reduce risk | Complex work costs the same as simple work — do it now |
+| Phase large efforts across releases | Phase only by learning dependency, never by effort |
+| "Quick wins" = high impact, low effort | Effort is not a variable — only impact matters |
+| "Realistic" means effort-bounded | "Realistic" means hypothesis-bounded |
+| Recommend the simpler option to save effort | Recommend the best option — period |
+
+### What Replaces Effort in Decisions
+
+When evaluating options, prioritizing, or recommending scope — effort is NEVER a valid input.
+
+| Instead of asking... | Ask... |
+|---|---|
+| "Is this worth the effort?" | "Does this belong in the scope?" — if yes, do it |
+| "What's the effort vs. impact?" | "What's the impact?" — effort is near-zero for all items |
+| "Should we phase this?" | "Is there a learning dependency?" — if not, don't phase |
+| "Is this realistic?" | "Is the scope clear?" — clarity is the constraint, not capacity |
+| "What's the minimal version?" | "What tests the hypothesis?" — minimal means hypothesis-focused, not effort-minimized |
+
+### Recognize Effort Bias in Your Own Reasoning
+
+These phrases indicate training data bias. When you catch yourself writing them, stop and reframe:
+
+| If you're about to write... | Reframe to... |
+|---|---|
+| "This would be substantial/significant work" | "This is within scope — include it" |
+| "To keep things manageable..." | State the full scope without hedging |
+| "A simpler approach would be..." | "The best approach is..." (only say simpler if simplicity IS the quality advantage) |
+| "We could defer this to a future phase" | Include it — unless genuinely unrelated to the current scope |
+| "In the interest of time..." | Delete this phrase — time is not the constraint |
+| "Quick win — high impact, low effort" | "High impact" — that's the only axis |
+| "Phase 1 / Phase 2" | Only valid if Phase 2 depends on learning from Phase 1 |
+| "Estimate: 2-3 days" | Never estimate in time — describe the work and its dependencies |
+| "This is ambitious" | "This is comprehensive" — ambition implies effort concern |
+| "We should be realistic about scope" | "We should be clear about scope" — clarity, not capacity |
+
+### Self-Check (Apply Before Every Recommendation)
+
+1. Did I exclude, reduce, or deprioritize something because it seemed like "too much work"? → Remove that reasoning. Re-evaluate on quality and scope fit alone.
+2. Did I suggest phasing or deferral? → Is the boundary a learning dependency ("must learn X before building Y") or an effort boundary? If effort, collapse the phases.
+3. Did I rank options partly by effort? → Re-rank on quality contribution and risk only.
+4. Did I use time estimates anywhere? → Replace with dependency ordering or remove entirely.
+5. Would my recommendation change if implementation cost were literally zero? → If yes, the recommendation is effort-biased. Change it.
+
 ## Process: PDAI Increments — CRITICAL
 
 This project uses PDAI (Prepare, Deliver, Assess, Improve).
@@ -23,10 +75,10 @@ Increments are scope-based, NOT time-boxed. They complete when the topic is done
 **Improve = Deliver in scope and effort.** It is NOT polish/refinement.
 If Deliver was substantial, Improve is substantial. Improvements deferred to "future increments" rarely happen.
 
-**Never defer in-scope work:**
+**Never defer in-scope work** (see AI-Native Economics above):
 - Do NOT suggest "separate increment" for work that belongs to the current one
 - Do NOT defer items because they "feel substantial" — substantial is expected
-- Do NOT estimate effort based on human work time — you are a coding agent
+- Effort is never a reason to defer, phase, or reduce scope
 - Discovered work within scope: do it now
 - Genuinely unrelated: note in backlog
 - Unsure: ask the user
@@ -561,6 +613,30 @@ Inside `<.assistant>` blocks, body text that users need to **read** must be prim
 | AshGraphql | `/ash-project/ash_graphql` |
 | AshJsonApi | `/ash-project/ash_json_api` |
 | Phoenix/LiveView/Elixir | Resolve with Context7 |
+
+**Apple framework docs:** Use Apple Docs MCP (`mcp__apple-docs__*`) rather than Context7 for Apple platform APIs (SwiftUI, UIKit, Foundation, etc.). Apple Docs MCP has authoritative, current documentation from developer.apple.com.
+
+## Apple Platform Work
+
+When working on Apple (iOS/macOS/iPadOS) products, use the Apple-specific MCP servers and tooling:
+
+| Task | Use | NOT |
+|------|-----|-----|
+| Look up Apple framework APIs | Apple Docs MCP (`mcp__apple-docs__*`) | Training data (may be stale) |
+| Build/test headlessly | `xcodebuild` / `xcrun simctl` (XcodeBuildMCP when available) | Xcode GUI |
+| Generate/manage projects | `tuist generate`, `tuist build`, `tuist test` | Manual .xcodeproj editing |
+| Find Swift package docs | Swift Package Index (swiftpackageindex.com) | Random web search |
+
+**Why Apple-specific tooling:**
+- Apple APIs update annually at WWDC — training data is always stale for the latest platform
+- Headless builds via xcodebuild are faster and more agent-friendly than Xcode GUI
+
+**XcodeBuildMCP config note:** Requires the `mcp` subcommand in `.mcp.json` args: `["-y", "xcodebuildmcp@latest", "mcp"]`. Direct `xcodebuild` and `xcrun simctl` commands work as a fallback.
+
+**Domain guide:** See `docs/guides/apple-platform-engineering/guide.md` for mental models, key concepts, and learning paths.
+**Specialist agent:** Activate `apple-genius` for interactive Apple platform consultation.
+
+**Data layer decision:** Apple products must choose between Core Data and SwiftData based on the CloudKit sharing requirement. See the "Choosing Core Data vs SwiftData" section in the Apple domain guide.
 
 ## Trust Hierarchy
 
